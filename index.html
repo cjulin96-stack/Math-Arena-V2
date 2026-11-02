@@ -1,1 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MATH ARENA - V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<div id="toast-container"></div>
+
+<div class="main-content">
+    
+    <!-- TELA DE LOGIN -->
+    <div id="tela-auth" class="screen active">
+        <div class="glass auth-container">
+            <h1 class="text-gradient text-center mb-20">MATH ARENA</h1>
+            <p class="text-center" style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px;">Faça login para continuar sua jornada.</p>
+            <input type="email" id="auth-email" placeholder="Seu E-mail">
+            <input type="password" id="auth-pass" placeholder="Sua Senha">
+            <button class="btn-primary" onclick="fazerLogin()">ENTRAR</button>
+            <button class="btn-secondary" style="margin-top: 10px;" onclick="fazerCadastro()">CRIAR CONTA</button>
+        </div>
+    </div>
+
+    <!-- TELA INICIAL (HOME) -->
+    <div id="tela-home" class="screen">
+        <div class="user-header">
+            <div class="user-info">
+                <div class="avatar-wrapper float-anim">
+                    <div class="frame frame-padrao" id="home-frame"></div>
+                    <div class="avatar-img" id="home-avatar">🐱</div>
+                </div>
+                <div>
+                    <div class="user-name" id="home-nome">Carregando...</div>
+                    <div class="user-level" id="home-nivel">Nível 1</div>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div style="display: flex;">
+                    <div class="bell-icon" onclick="mostrarNotificacoes()">🔔</div>
+                    <div class="badge badge-fire" id="home-streak">🔥 0</div>
+                </div>
+                <div class="badge badge-coin" style="margin-top: 5px;">🪙 <span id="home-moedas">0</span></div>
+            </div>
+        </div>
+
+        <div class="glass mb-20">
+            <div class="xp-text">
+                <span>PROGRESSO</span>
+                <span id="home-xp-txt">0 / 300 XP</span>
+            </div>
+            <div class="xp-container">
+                <div class="xp-bar" id="home-xp-bar"></div>
+            </div>
+            <div id="home-divisao" style="font-size: 10px; font-weight: bold; color: var(--primary); text-align: right;">🥉 BRONZE</div>
+        </div>
+
+        <!-- BOTÕES DA TELA INICIAL (Sem o botão JOGAR) -->
+        <div class="grid-buttons" style="grid-template-columns: 1fr;">
+            <button class="btn-primary" style="background: linear-gradient(135deg, #00f0ff, #7000ff); padding: 25px;" onclick="mudarAba('tela-academia')">
+                <span style="font-size: 30px;">📚</span><br>IR PARA ACADEMIA
+            </button>
+        </div>
+
+        <div class="grid-buttons">
+            <button class="btn-secondary" style="margin-top: 0;" onclick="mudarAba('tela-ranking')">🏆 RANKING</button>
+            <button class="btn-secondary" style="margin-top: 0;" onclick="mudarAba('tela-loja')">🛒 LOJA</button>
+        </div>
+
+        <div class="glass">
+            <h3 class="text-gradient mb-15">Missões Diárias</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Complete desafios para ganhar moedas!</p>
+            <button class="btn-secondary" onclick="mudarAba('tela-missoes')">Ver Missões</button>
+        </div>
+    </div>
+        <!-- TELA ACADEMIA (ESTILO DUOLINGO) -->
+    <div id="tela-academia" class="screen">
+        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">ACADEMIA</h2>
+        <p class="text-center mb-20" style="font-size: 13px; color: var(--text-muted);">Trilha de Aprendizado</p>
+        
+        <!-- Onde as aulas são geradas -->
+        <div id="trilha-academia"></div>
+        
+        <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
+    </div>
+
+    <!-- POP-UP DA AULA -->
+    <div id="modal-aula">
+        <div class="modal-content">
+            <button class="modal-close" onclick="fecharAula()">✖</button>
+            <h2 id="modal-aula-titulo" class="modal-title text-gradient">Título da Aula</h2>
+            <p id="modal-aula-conteudo" class="modal-body">Conteúdo da aula...</p>
+            <button id="modal-aula-btn" class="btn-duolingo" onclick="concluirAulaAtual()">Concluir Aula</button>
+        </div>
+    </div>
+
+    <!-- TELA LOJA -->
+    <div id="tela-loja" class="screen">
+        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">LOJA</h2>
+        <div class="text-center mb-20" style="font-weight: bold; color: var(--gold);">
+            Suas moedas: 🪙 <span id="loja-moedas">0</span>
+        </div>
+        
+        <!-- Abas -->
+        <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 15px;">
+            <button id="aba-moldura" class="btn-secondary tab-loja ativa" style="width: auto; padding: 8px 15px; margin: 0; white-space: nowrap;" onclick="mudarAbaLoja('moldura', this)">🖼️ Molduras</button>
+            <button id="aba-avatar" class="btn-secondary tab-loja" style="width: auto; padding: 8px 15px; margin: 0; white-space: nowrap;" onclick="mudarAbaLoja('avatar', this)">👤 Avatares</button>
+            <button id="aba-duplicador" class="btn-secondary tab-loja" style="width: auto; padding: 8px 15px; margin: 0; white-space: nowrap;" onclick="mudarAbaLoja('duplicador', this)">🚀 Duplicadores</button>
+        </div>
+
+        <div id="lista-loja"></div>
+        <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
+    </div>
+
+    <!-- TELA GUARDA-ROUPA -->
+    <div id="tela-guarda-roupa" class="screen">
+        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">MEU COFRE</h2>
+        
+        <div class="glass mb-20">
+            <h3 class="mb-15" style="font-size: 16px; color: var(--primary);">Avatares</h3>
+            <div id="seletor-avatares" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
+        </div>
+
+        <div class="glass mb-20">
+            <h3 class="mb-15" style="font-size: 16px; color: var(--primary);">Molduras</h3>
+            <div id="seletor-molduras" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
+        </div>
+
+        <button class="btn-secondary mt-20" onclick="mudarAba('tela-perfil')">VOLTAR</button>
+    </div>
+
+    <!-- TELA PERFIL -->
+    <div id="tela-perfil" class="screen">
+        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">PERFIL</h2>
+        <div class="glass text-center mb-20">
+            <div class="avatar-wrapper float-anim" style="margin: 0 auto 15px auto; width: 90px; height: 90px;">
+                <div class="frame frame-padrao" id="perfil-frame"></div>
+                <div class="avatar-img" id="perfil-avatar" style="width: 66px; height: 66px; font-size: 36px;">🐱</div>
+            </div>
+            <input type="text" id="perfil-nome-input" placeholder="Seu nome" oninput="salvarNomeDelay()" style="text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 5px;">
+        </div>
+        
+        <div class="glass mb-20" style="text-align: center;">
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;">Personalize seu personagem!</p>
+            <button class="btn-primary" style="padding: 15px; font-size: 16px;" onclick="mudarAba('tela-guarda-roupa')">👕 Abrir Guarda-Roupa</button>
+        </div>
+
+        <button class="btn-secondary" style="background: rgba(255, 8, 68, 0.1); border-color: rgba(255,8,68,0.3); color: #ff0844;" onclick="sair()">SAIR DA CONTA</button>
+        <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
+    </div>
+
+    <!-- TELA RANKING -->
+    <div id="tela-ranking" class="screen">
+        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">RANKING GLOBAL</h2>
+        
+        <div class="podium-container">
+            <div class="podium-top">
+                <div class="podium-card podium-2" id="rank-2">
+                    <div class="podium-rank-badge">🥈</div>
+                    <div class="podium-avatar"><div style="font-size: 30px;">🐱</div></div>
+                    <div class="podium-name">Carregando...</div>
+                    <div class="podium-xp">0 XP</div>
+                </div>
+                <div class="podium-card podium-1" id="rank-1">
+                    <div class="podium-rank-badge">🥇</div>
+                    <div class="podium-avatar"><div style="font-size: 40px;">🐱</div></div>
+                    <div class="podium-name">Carregando...</div>
+                    <div class="podium-xp">0 XP</div>
+                </div>
+                <div class="podium-card podium-3" id="rank-3">
+                    <div class="podium-rank-badge">🥉</div>
+                    <div class="podium-avatar"><div style="font-size: 30px;">🐱</div></div>
+                    <div class="podium-name">Carregando...</div>
+                    <div class="podium-xp">0 XP</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lista-ranking"></div>
+        <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
+    </div>
+
+    <!-- TELA MISSÕES -->
+    <div id="tela-missoes" class="screen">
+        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">MISSÕES</h2>
+        <div class="glass text-center mb-20">
+            <p style="color: var(--text-muted); font-size: 14px;">As missões diárias estarão disponíveis em breve. Continue estudando para progredir!</p>
+        </div>
+        <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
+    </div>
+</div> <!-- Fim da main-content -->
+
+<!-- MENU INFERIOR -->
+<nav id="bottom-nav" class="bottom-nav">
+    <div class="nav-item" onclick="mudarAba('tela-home', this)"><div class="icon">🏠</div>Início</div>
+    <div class="nav-item" onclick="mudarAba('tela-academia', this)"><div class="icon">📚</div>Academia</div>
+    <div class="nav-item" onclick="mudarAba('tela-loja', this)"><div class="icon">🛒</div>Loja</div>
+    <div class="nav-item" onclick="mudarAba('tela-perfil', this)"><div class="icon">👤</div>Perfil</div>
+</nav>
