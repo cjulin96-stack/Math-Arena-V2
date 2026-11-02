@@ -77,26 +77,92 @@
             <button class="btn-secondary" onclick="mudarAba('tela-missoes')">Ver Missões</button>
         </div>
     </div>
-        <!-- TELA ACADEMIA (ESTILO DUOLINGO) -->
-    <div id="tela-academia" class="screen">
-        <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">ACADEMIA</h2>
-        <p class="text-center mb-20" style="font-size: 13px; color: var(--text-muted);">Trilha de Aprendizado</p>
-        
-        <!-- Onde as aulas são geradas -->
-        <div id="trilha-academia"></div>
-        
-        <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
-    </div>
+<!-- TELA ACADEMIA (ESTILO DUOLINGO) -->
+<div id="tela-academia" class="screen">
+    <h2 class="text-gradient text-center mb-20" style="font-size: 28px;">ACADEMIA</h2>
+    <p class="text-center mb-20" style="font-size: 13px; color: var(--text-muted);">Trilha de Aprendizado</p>
+    
+    <!-- Onde as aulas são geradas -->
+    <div id="trilha-academia"></div>
+    
+    <button class="btn-secondary mt-20" onclick="mudarAba('tela-home')">VOLTAR</button>
+</div>
 
-    <!-- POP-UP DA AULA -->
-    <div id="modal-aula">
-        <div class="modal-content">
-            <button class="modal-close" onclick="fecharAula()">✖</button>
-            <h2 id="modal-aula-titulo" class="modal-title text-gradient">Título da Aula</h2>
-            <p id="modal-aula-conteudo" class="modal-body">Conteúdo da aula...</p>
-            <button id="modal-aula-btn" class="btn-duolingo" onclick="concluirAulaAtual()">Concluir Aula</button>
+<!-- POP-UP DA AULA -->
+<div id="modal-aula">
+    <div class="modal-content">
+        <button class="modal-close" onclick="fecharAula()">✖</button>
+        <h2 id="modal-aula-titulo" class="modal-title text-gradient">Título da Aula</h2>
+        <p id="modal-aula-conteudo" class="modal-body">Conteúdo da aula...</p>
+        <button id="modal-aula-btn" class="btn-duolingo" onclick="concluirAulaAtual()">Concluir Aula</button>
+    </div>
+<!-- POP-UP DE RESULTADO (FIM DA LIÇÃO) -->
+<div id="modal-resultado" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1001; justify-content: center; align-items: center; padding: 20px; flex-direction: column;">
+    
+    <div class="glass result-anim" style="width: 100%; max-width: 400px; text-align: center; border-color: #00ff88; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);">
+        <h1 style="font-size: 40px; margin-bottom: 10px;">🏆</h1>
+        <h2 class="text-gradient" style="font-size: 28px; margin-bottom: 5px;">Lição Concluída!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Você foi incrível!</p>
+
+        <div class="result-stats">
+            <div class="result-box">
+                <div style="font-size: 24px; font-weight: bold; color: var(--gold);">⏱️</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Tempo</div>
+                <div id="resultado-tempo" style="font-weight: 800; font-size: 16px;">00:00</div>
+            </div>
+            <div class="result-box">
+                <div style="font-size: 24px; font-weight: bold; color: #00ff88;">🎯</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Precisão</div>
+                <div id="resultado-precisao" style="font-weight: 800; font-size: 16px;">100%</div>
+            </div>
+            <div class="result-box" style="grid-column: span 2; border-color: var(--gold);">
+                <div style="font-size: 12px; color: var(--text-muted);">XP Ganho</div>
+                <div id="resultado-xp" style="font-weight: 800; font-size: 20px; color: var(--gold);">+20 XP</div>
+            </div>
+        </div>
+
+        <button class="btn-duolingo" style="margin-top: 25px;" onclick="fecharResultado()">CONTINUAR</button>
+    </div>
+</div>
+</div>
+
+<!-- TELA DO DESAFIO (SISTEMA DE AULAS) -->
+<div id="tela-desafio" class="screen">
+    <div class="game-header">
+        <button class="btn-secondary" style="width: auto; padding: 10px; margin: 0;" onclick="cancelarDesafio()">✖</button>
+        <div class="game-progress">
+            <div class="game-progress-fill" id="desafio-progresso"></div>
         </div>
     </div>
+
+    <div id="desafio-conteudo">
+        <!-- 1. JOGO DE COMBINAR PARES -->
+        <div id="jogo-pares" style="display: none;">
+            <h2 class="text-center mb-20" style="font-size: 20px;">Combine os pares:</h2>
+            <div class="match-container">
+                <div class="match-column" id="coluna-esquerda"></div>
+                <div class="match-column" id="coluna-direita"></div>
+            </div>
+        </div>
+
+        <!-- 2. JOGO DE MÚLTIPLA ESCOLHA -->
+        <div id="jogo-multipla" style="display: none;">
+            <h2 class="text-center mb-20" style="font-size: 24px; font-family: 'Orbitron';" id="multipla-pergunta">Pergunta...</h2>
+            <div id="multipla-opcoes" style="display: flex; flex-direction: column; gap: 15px;"></div>
+        </div>
+
+        <!-- 3. JOGO DE COMPLETAR A FRASE -->
+        <div id="jogo-completar" style="display: none;">
+            <h2 class="text-center mb-20" style="font-size: 24px; font-family: 'Orbitron';" id="completar-pergunta">2 + ___ = 4</h2>
+            <input type="number" id="completar-input" placeholder="Digite o número" style="text-align: center; font-size: 24px; font-weight: bold;">
+        </div>
+    </div>
+
+    <!-- BARRA INFERIOR DE VERIFICAÇÃO (ESTILO DUOLINGO) -->
+    <div id="desafio-footer" style="position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px 20px 25px 20px; background: var(--bg-dark); border-top: 1px solid rgba(255,255,255,0.1); z-index: 100; display: none;">
+        <button id="btn-verificar-desafio" class="btn-duolingo" onclick="verificarRespostaDesafio()">VERIFICAR</button>
+    </div>
+</div>
 
     <!-- TELA LOJA -->
     <div id="tela-loja" class="screen">
