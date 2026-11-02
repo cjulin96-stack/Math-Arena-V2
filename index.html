@@ -19,6 +19,7 @@
       <nav class="main-nav" aria-label="Navegação principal">
         <button class="nav-item active" data-view="learn"><span>⌂</span> Aprender</button>
         <button class="nav-item" data-view="practice"><span>✦</span> Prática livre</button>
+        <button class="nav-item" data-view="profile"><span>◉</span> Meu perfil</button>
         <button class="nav-item" data-view="achievements"><span>♜</span> Conquistas</button>
         <button class="nav-item" data-view="ranking"><span>♛</span> Ranking local</button>
         <button class="nav-item" data-view="stats"><span>▥</span> Estatísticas</button>
@@ -59,6 +60,16 @@
           <button class="practice-card" data-topic="Geometria"><span class="practice-icon green">△</span><b>Geometria</b><small>Formas, perímetro e área</small><span class="card-arrow">→</span></button>
           <button class="practice-card" data-topic="Porcentagem"><span class="practice-icon pink">%</span><b>Porcentagem</b><small>Descontos, aumentos e proporções</small><span class="card-arrow">→</span></button>
           <button class="practice-card" data-topic="Potências"><span class="practice-icon yellow">ⁿ</span><b>Potências</b><small>Potenciação e raízes</small><span class="card-arrow">→</span></button>
+        </div>
+      </section>
+
+      <section id="view-profile" class="view">
+        <div class="section-heading"><div><p class="eyebrow">IDENTIDADE DO JOGADOR</p><h2>Meu perfil</h2><p class="muted">Acompanhe sua evolução no MathQuest.</p></div></div>
+        <div class="profile-page-card">
+          <div class="profile-hero"><div class="profile-big-avatar" id="profileAvatar">M</div><div><span class="profile-rank">EXPLORADOR MATEMÁTICO</span><h2 id="profileName">Matemático</h2><p id="profileLevel">Nível 1 · Começando a jornada</p></div></div>
+          <div class="profile-metrics"><div><b id="profileXP">0</b><small>XP total</small></div><div><b id="profileCorrect">0</b><small>Acertos</small></div><div><b id="profileAccuracy">0%</b><small>Precisão</small></div><div><b id="profileStreak">0</b><small>Dias seguidos</small></div></div>
+          <div class="profile-account"><span>💾</span><div><b>Progresso neste dispositivo</b><small>Seu progresso atual continua salvo localmente. A conexão de conta e nuvem será ativada numa etapa separada, após os testes.</small></div><span class="local-pill">LOCAL</span></div>
+          <button class="btn btn-primary" id="editProfileBtn">Editar nome do jogador</button>
         </div>
       </section>
 
