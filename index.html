@@ -9,7 +9,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-shell">
+  <section id="authScreen" class="auth-screen hidden">
+    <div class="auth-card">
+      <a class="brand auth-brand" href="#"><span class="brand-mark">∑</span><span>math<span class="brand-accent">quest</span></span></a>
+      <p class="eyebrow">SUA PRÓXIMA CONQUISTA COMEÇA AQUI</p>
+      <h1 id="authTitle">Entre na sua conta</h1>
+      <p id="authSubtitle" class="auth-subtitle">Seu progresso começa aqui.</p>
+      <form id="authForm">
+        <label id="displayNameField" class="hidden" for="authDisplayName">Nome de jogador</label>
+        <input id="authDisplayName" class="auth-input" type="text" maxlength="24" placeholder="Como quer ser chamado?" autocomplete="nickname">
+        <label for="authEmail">E-mail</label>
+        <input id="authEmail" class="auth-input" type="email" placeholder="voce@email.com" autocomplete="email" required>
+        <div id="passwordField"><label for="authPassword">Senha</label><input id="authPassword" class="auth-input" type="password" minlength="8" placeholder="Mínimo de 8 caracteres" autocomplete="current-password"></div>
+        <div id="confirmPasswordField" class="hidden"><label for="authNewPassword">Nova senha</label><input id="authNewPassword" class="auth-input" type="password" minlength="8" placeholder="Mínimo de 8 caracteres" autocomplete="new-password"></div>
+        <button id="authSubmit" class="btn btn-primary auth-submit" type="submit">Entrar</button>
+      </form>
+      <button id="forgotPassword" class="auth-link" type="button">Esqueci minha senha</button>
+      <div id="authSwitch" class="auth-switch"><span>Ainda não tem conta?</span> <button id="showSignup" type="button">Criar conta</button><button id="showLogin" class="hidden" type="button">Já tenho conta</button></div>
+      <p id="authMessage" class="auth-message" role="status"></p>
+      <small class="auth-privacy">Sua conta é protegida pelo Supabase. Nunca compartilhe sua senha.</small>
+    </div>
+  </section>
+  <div class="app-shell auth-locked" id="appShell">
     <aside class="sidebar">
       <a class="brand" href="#" aria-label="MathQuest início"><span class="brand-mark">∑</span><span>math<span class="brand-accent">quest</span></span></a>
       <div class="profile-mini">
@@ -22,6 +43,9 @@
         <button class="nav-item" data-view="achievements"><span>♜</span> Conquistas</button>
         <button class="nav-item" data-view="ranking"><span>♛</span> Ranking local</button>
         <button class="nav-item" data-view="stats"><span>▥</span> Estatísticas</button>
+        <button class="nav-item" data-view="missions"><span>🎯</span> Missões diárias</button>
+        <button class="nav-item" data-view="shop"><span>🛒</span> Loja de vidas</button>
+        <button class="nav-item" data-view="profile"><span>👤</span> Meu perfil</button>
       </nav>
       <div class="sidebar-bottom">
         <div class="streak-card"><span class="streak-icon">🔥</span><div><b id="streakSide">0 dias</b><small>Sequência atual</small></div></div>
@@ -34,10 +58,12 @@
       <header class="topbar">
         <div><p class="eyebrow" id="dateLabel">SUA JORNADA COMEÇA AGORA</p><h1 id="pageTitle">Continue aprendendo</h1></div>
         <div class="top-stats">
+          <div class="top-stat lives"><span>❤️</span><b id="livesTop">5/10</b><small>vidas</small></div>
           <div class="top-stat fire"><span>🔥</span><b id="streakTop">0</b><small>dias</small></div>
           <div class="top-stat gem"><span>💎</span><b id="gemsTop">0</b><small>gemas</small></div>
           <div class="top-stat xp"><span>⚡</span><b id="xpTop">0</b><small>XP</small></div>
         </div>
+        <button class="btn btn-secondary logout-btn" id="logoutBtn" type="button">Sair</button>
       </header>
 
       <section id="view-learn" class="view active">
@@ -83,6 +109,33 @@
         <div class="chart-panel"><h3>Seu ritmo de aprendizado</h3><div id="weeklyChart" class="weekly-chart"></div><p class="muted tiny">XP registrado nos últimos sete dias.</p></div>
       </section>
 
+      <section id="view-missions" class="view">
+        <div class="section-heading"><div><p class="eyebrow">DESAFIOS DE HOJE</p><h2>Missões diárias</h2><p class="muted">Complete objetivos e resgate vidas extras. Cada missão pode ser resgatada uma vez por dia.</p></div></div>
+        <div class="mission-summary"><div><span>❤️</span><small>Suas vidas</small><strong id="missionLives">--</strong></div><div><span>✓</span><small>Acertos hoje</small><strong id="missionCorrectToday">0</strong></div><div><span>📚</span><small>Questões novas hoje</small><strong id="missionLessonsToday">0</strong></div></div>
+        <div id="missionGrid" class="mission-grid"></div>
+      </section>
+
+      <section id="view-shop" class="view">
+        <div class="section-heading"><div><p class="eyebrow">CENTRAL DE RECOMPENSAS</p><h2>Loja de vidas</h2><p class="muted">Use suas gemas para recuperar vidas. O limite é de 10 vidas.</p></div></div>
+        <div class="shop-balance"><span>❤️ Vidas disponíveis</span><strong id="shopLives">5 / 10</strong><span>💎 Gemas: <b id="shopGems">0</b></span></div>
+        <div class="shop-grid">
+          <article class="shop-card"><div class="shop-emoji">❤️</div><h3>1 vida</h3><p>Recupere uma vida.</p><button class="btn btn-primary" data-buy-lives="1"><span class="buy-label">Comprar por 10 💎</span></button></article>
+          <article class="shop-card"><div class="shop-emoji">💖</div><h3>5 vidas</h3><p>Pacote com desconto.</p><button class="btn btn-primary" data-buy-lives="5"><span class="buy-label">Comprar por 40 💎</span></button></article>
+        </div>
+        <p class="shop-note">As compras são confirmadas pelo Supabase. Não é possível ultrapassar o limite de 10 vidas.</p>
+      </section>
+
+      <section id="view-profile" class="view">
+        <div class="section-heading"><div><p class="eyebrow">SUA CONTA</p><h2>Meu perfil</h2><p class="muted">Estatísticas sincronizadas com sua conta.</p></div></div>
+        <div class="profile-stats-grid">
+          <div class="stat-panel"><span>⚡</span><small>XP</small><strong id="profileXP">0</strong></div>
+          <div class="stat-panel"><span>💎</span><small>Gemas</small><strong id="profileGems">0</strong></div>
+          <div class="stat-panel"><span>❤️</span><small>Vidas</small><strong id="profileLives">0/10</strong></div>
+          <div class="stat-panel"><span>📚</span><small>Questões concluídas</small><strong id="profileLessons">0</strong></div>
+        </div>
+        <div class="settings-panel profile-account"><b id="profileDisplayName">Matemático</b><small id="profileEmail"></small><small>Seu progresso principal fica salvo na nuvem.</small></div>
+      </section>
+
       <section id="view-settings" class="view">
         <div class="section-heading"><div><p class="eyebrow">PERSONALIZAÇÃO</p><h2>Configurações</h2><p class="muted">Ajuste sua experiência de aprendizagem.</p></div></div>
         <div class="settings-panel"><label for="playerName">Nome do jogador</label><div class="setting-line"><input id="playerName" maxlength="18" placeholder="Como devemos chamar você?"><button class="btn btn-primary" id="saveNameBtn">Salvar</button></div><hr><div class="setting-line"><div><b>Efeitos sonoros</b><small>Pequenos sons ao responder.</small></div><label class="switch"><input type="checkbox" id="soundToggle" checked><span></span></label></div><hr><div class="setting-line"><div><b>Redefinir progresso</b><small>Apaga XP, sequência e lições deste navegador.</small></div><button class="btn btn-danger" id="resetBtn">Redefinir</button></div></div>
@@ -100,12 +153,9 @@
   </div>
   <div id="toast" class="toast" role="status"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="questions.js"></script>
-<script src="app.js"></script>
-<script src="supabase-auth.js"></script>
-<script src="profile.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-auth.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
 </body>
-</html>
-</body>
-
+  </html>
