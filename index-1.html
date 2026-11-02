@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101b35">
+  <meta name="description" content="MathQuest — aprenda matemática com lições, desafios, XP e conquistas.">
+  <title>MathQuest — Matemática em missões</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="MathQuest início"><span class="brand-mark">∑</span><span>math<span class="brand-accent">quest</span></span></a>
+      <div class="profile-mini">
+        <div class="avatar" id="avatarInitial">M</div>
+        <div><strong id="sideName">Matemático</strong><small>Explorador nível <span id="sideLevel">1</span></small></div>
+      </div>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <button class="nav-item active" data-view="learn"><span>⌂</span> Aprender</button>
+        <button class="nav-item" data-view="practice"><span>✦</span> Prática livre</button>
+        <button class="nav-item" data-view="achievements"><span>♜</span> Conquistas</button>
+        <button class="nav-item" data-view="ranking"><span>♛</span> Ranking local</button>
+        <button class="nav-item" data-view="stats"><span>▥</span> Estatísticas</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="streak-card"><span class="streak-icon">🔥</span><div><b id="streakSide">0 dias</b><small>Sequência atual</small></div></div>
+        <button class="nav-item" data-view="settings"><span>⚙</span> Configurações</button>
+        <p class="side-foot">Aprender é uma aventura.<br>Um passo de cada vez.</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div><p class="eyebrow" id="dateLabel">SUA JORNADA COMEÇA AGORA</p><h1 id="pageTitle">Continue aprendendo</h1></div>
+        <div class="top-stats">
+          <div class="top-stat fire"><span>🔥</span><b id="streakTop">0</b><small>dias</small></div>
+          <div class="top-stat gem"><span>💎</span><b id="gemsTop">0</b><small>gemas</small></div>
+          <div class="top-stat xp"><span>⚡</span><b id="xpTop">0</b><small>XP</small></div>
+        </div>
+      </header>
+
+      <section id="view-learn" class="view active">
+        <div class="welcome-banner">
+          <div class="welcome-copy"><span class="tag">SUA TRILHA DE MATEMÁTICA</span><h2>Pequenas missões.<br><em>Grandes descobertas.</em></h2><p>Pratique um pouco todos os dias e transforme desafios em conquistas.</p><button class="btn btn-light" id="continueBtn">Continuar jornada <span>→</span></button></div>
+          <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="math-symbol sym-a">π</div><div class="math-symbol sym-b">√</div><div class="math-symbol sym-c">÷</div><div class="hero-core">∑</div><div class="spark s1">✦</div><div class="spark s2">✧</div></div>
+        </div>
+        <div class="section-heading"><div><p class="eyebrow">MAPA DE APRENDIZADO</p><h2>Sua trilha</h2></div><span class="muted" id="progressLabel">0 de 12 lições concluídas</span></div>
+        <div class="overall-progress"><div id="overallBar"></div></div>
+        <div id="courseMap" class="course-map"></div>
+      </section>
+
+      <section id="view-practice" class="view">
+        <div class="section-heading"><div><p class="eyebrow">TREINO PERSONALIZADO</p><h2>Prática livre</h2><p class="muted">Escolha um assunto e pratique no seu ritmo.</p></div></div>
+        <div class="practice-grid">
+          <button class="practice-card" data-topic="Operações"><span class="practice-icon purple">＋</span><b>Operações básicas</b><small>Adição, subtração, multiplicação e divisão</small><span class="card-arrow">→</span></button>
+          <button class="practice-card" data-topic="Frações"><span class="practice-icon orange">½</span><b>Frações</b><small>Partes, equivalência e operações</small><span class="card-arrow">→</span></button>
+          <button class="practice-card" data-topic="Álgebra"><span class="practice-icon blue">x²</span><b>Álgebra</b><small>Expressões e equações</small><span class="card-arrow">→</span></button>
+          <button class="practice-card" data-topic="Geometria"><span class="practice-icon green">△</span><b>Geometria</b><small>Formas, perímetro e área</small><span class="card-arrow">→</span></button>
+          <button class="practice-card" data-topic="Porcentagem"><span class="practice-icon pink">%</span><b>Porcentagem</b><small>Descontos, aumentos e proporções</small><span class="card-arrow">→</span></button>
+          <button class="practice-card" data-topic="Potências"><span class="practice-icon yellow">ⁿ</span><b>Potências</b><small>Potenciação e raízes</small><span class="card-arrow">→</span></button>
+        </div>
+      </section>
+
+      <section id="view-achievements" class="view">
+        <div class="section-heading"><div><p class="eyebrow">SUAS CONQUISTAS</p><h2>Galeria de medalhas</h2><p class="muted">Cada passo conta. Desbloqueie medalhas praticando.</p></div></div>
+        <div id="achievementGrid" class="achievement-grid"></div>
+      </section>
+
+      <section id="view-ranking" class="view">
+        <div class="section-heading"><div><p class="eyebrow">PLACAR DO DISPOSITIVO</p><h2>Ranking local</h2><p class="muted">Este placar é salvo somente neste navegador.</p></div></div>
+        <div class="ranking-panel"><div class="ranking-head"><span>POSIÇÃO</span><span>JOGADOR</span><span>XP TOTAL</span></div><div id="rankingRows"></div><div class="ranking-note">Dica: adicione outros perfis neste dispositivo para competir entre amigos.</div><button class="btn btn-secondary" id="addPlayerBtn">＋ Adicionar perfil de jogador</button></div>
+      </section>
+
+      <section id="view-stats" class="view">
+        <div class="section-heading"><div><p class="eyebrow">SEU DESEMPENHO</p><h2>Estatísticas</h2><p class="muted">Veja sua evolução ao longo da jornada.</p></div></div>
+        <div class="stats-grid">
+          <div class="stat-panel"><span>⚡</span><small>XP acumulado</small><strong id="statXP">0</strong></div>
+          <div class="stat-panel"><span>✓</span><small>Respostas corretas</small><strong id="statCorrect">0</strong></div>
+          <div class="stat-panel"><span>◎</span><small>Precisão</small><strong id="statAccuracy">0%</strong></div>
+          <div class="stat-panel"><span>📚</span><small>Lições concluídas</small><strong id="statLessons">0</strong></div>
+        </div>
+        <div class="chart-panel"><h3>Seu ritmo de aprendizado</h3><div id="weeklyChart" class="weekly-chart"></div><p class="muted tiny">XP registrado nos últimos sete dias.</p></div>
+      </section>
+
+      <section id="view-settings" class="view">
+        <div class="section-heading"><div><p class="eyebrow">PERSONALIZAÇÃO</p><h2>Configurações</h2><p class="muted">Ajuste sua experiência de aprendizagem.</p></div></div>
+        <div class="settings-panel"><label for="playerName">Nome do jogador</label><div class="setting-line"><input id="playerName" maxlength="18" placeholder="Como devemos chamar você?"><button class="btn btn-primary" id="saveNameBtn">Salvar</button></div><hr><div class="setting-line"><div><b>Efeitos sonoros</b><small>Pequenos sons ao responder.</small></div><label class="switch"><input type="checkbox" id="soundToggle" checked><span></span></label></div><hr><div class="setting-line"><div><b>Redefinir progresso</b><small>Apaga XP, sequência e lições deste navegador.</small></div><button class="btn btn-danger" id="resetBtn">Redefinir</button></div></div>
+      </section>
+
+      <footer class="main-footer"><span>© 2026 MathQuest</span><span>Feito para aprender matemática com diversão.</span></footer>
+    </main>
+  </div>
+
+  <div id="lessonModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="lessonTitle">
+    <div class="lesson-window">
+      <div class="lesson-top"><button class="icon-btn" id="closeLesson" aria-label="Fechar lição">✕</button><div class="lesson-progress-track"><div id="lessonProgress"></div></div><div class="hearts">♥ <span id="heartsCount">5</span></div></div>
+      <div id="lessonContent" class="lesson-content"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
