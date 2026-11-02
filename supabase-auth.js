@@ -1,327 +1,130 @@
-/* MATHQUEST — AUTENTICAÇÃO SUPABASE */
 (() => {
   "use strict";
-
-  const URL = window.MATHQUEST_SUPABASE_URL;
-  const KEY = window.MATHQUEST_SUPABASE_KEY;
-
-  if (!window.supabase || !URL || !KEY) {
-    console.error("MathQuest: configuração do Supabase não encontrada.");
+  const $ = (id) => document.getElementById(id);
+  const authScreen = $("authScreen");
+  const appShell = $("appShell");
+  const form = $("authForm");
+  const message = $("authMessage");
+  const submit = $("authSubmit");
+  const supabaseLib = window.supabase;
+  if (!supabaseLib || !window.MATHQUEST_SUPABASE_URL || !window.MATHQUEST_SUPABASE_KEY) {
+    message.textContent = "Não foi possível carregar a conexão com o Supabase. Atualize a página.";
     return;
   }
 
-  const client = window.supabase.createClient(URL, KEY);
-  window.MATHQUEST_AUTH = client;
-
-  const style = document.createElement("style");
-  style.textContent = `
-    #mq-auth-button {
-      border: 0; border-radius: 12px; padding: 11px 16px;
-      background: #7157e8; color: white; font-weight: 700;
-      cursor: pointer; margin-left: 10px;
-    }
-    #mq-auth-overlay {
-      position: fixed; inset: 0; z-index: 99999;
-      background: rgba(5,10,25,.78); display: none;
-      align-items: center; justify-content: center; padding: 16px;
-    }
-    #mq-auth-box {
-      width: 100%; max-width: 410px; background: #fff;
-      color: #17213a; border-radius: 20px; padding: 25px;
-      box-shadow: 0 20px 70px #0006; font-family: Arial,sans-serif;
-    }
-    #mq-auth-box h2 { margin: 0 0 8px; font-size: 25px; }
-    #mq-auth-box p { color: #68738b; line-height: 1.5; }
-    #mq-auth-box input {
-      box-sizing: border-box; width: 100%; padding: 13px;
-      margin: 7px 0 12px; border: 1px solid #d8deea;
-      border-radius: 10px; font-size: 16px;
-    }
-    #mq-auth-box button {
-      padding: 12px; border: 0; border-radius: 10px;
-      cursor: pointer; font-weight: bold;
-    }
-    #mq-auth-submit {
-      width: 100%; color: white; background: #7157e8;
-      margin-top: 8px;
-    }
-    #mq-auth-switch {
-      background: #eeeafd; color: #6047d5; width: 100%;
-      margin-top: 10px;
-    }
-    #mq-auth-close {
-      float: right; background: #f0f1f5; color: #333;
-    }
-    #mq-auth-message {
-      min-height: 22px; font-size: 13px; overflow-wrap: anywhere;
-    }
-    #mq-auth-logout {
-      background: #fce9e9; color: #b52d2d;
-      margin-top: 10px; width: 100%; display: none;
-    }
-  `;
-  document.head.appendChild(style);
-
-  const overlay = document.createElement("div");
-  overlay.id = "mq-auth-overlay";
-  overlay.innerHTML = `
-    <div id="mq-auth-box">
-      <button id="mq-auth-close" type="button">Fechar ✕</button>
-      <h2 id="mq-auth-title">Entrar no MathQuest</h2>
-      <p id="mq-auth-description">Entre na sua conta para acessar seu perfil.</p>
-
-      <form id="mq-auth-form">
-        <div id="mq-auth-name-area" style="display:none">
-          <label for="mq-auth-name">Seu nome</label>
-          <input id="mq-auth-name" maxlength="24"
-            minlength="2" placeholder="Como devemos chamar você?">
-        </div>
-
-        <label for="mq-auth-email">E-mail</label>
-        <input id="mq-auth-email" type="email"
-          autocomplete="email" required placeholder="seu@email.com">
-
-        <label for="mq-auth-password">Senha</label>
-        <input id="mq-auth-password" type="password"
-          autocomplete="current-password" required
-          minlength="6" placeholder="Mínimo de 6 caracteres">
-
-        <button id="mq-auth-submit" type="submit">Entrar</button>
-      </form>
-
-      <button id="mq-auth-switch" type="button">
-        Criar uma conta
-      </button>
-
-      <button id="mq-auth-reset" type="button"
-        style="background:transparent;color:#6047d5;width:100%">
-        Esqueci minha senha
-      </button>
-
-      <button id="mq-auth-logout" type="button">
-        Sair da conta
-      </button>
-
-      <p id="mq-auth-message" role="status"></p>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-
-  const $ = id => document.getElementById(id);
-
+  const client = supabaseLib.createClient(window.MATHQUEST_SUPABASE_URL, window.MATHQUEST_SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
+  window.MATHQUEST_SUPABASE = client;
+  window.MQ_USER = null;
+  window.MQ_PROFILE = null;
   let mode = "login";
-  let currentUser = null;
 
-  function message(text, error = false) {
-    $("mq-auth-message").textContent = text;
-    $("mq-auth-message").style.color = error ? "#c0392b" : "#27834a";
-  }
+  const setMessage = (text, type = "") => {
+    message.textContent = text;
+    message.className = "auth-message" + (type ? " " + type : "");
+  };
+  const setMode = (next) => {
+    mode = next;
+    $("authTitle").textContent = next === "signup" ? "Crie sua conta" : next === "recovery" ? "Nova senha" : "Entre na sua conta";
+    $("authSubtitle").textContent = next === "signup" ? "Comece sua jornada no MathQuest." : next === "recovery" ? "Escolha uma senha nova para sua conta." : "Seu progresso começa aqui.";
+    $("displayNameField").classList.toggle("hidden", next !== "signup");
+    $("passwordField").classList.toggle("hidden", next === "recovery");
+    $("confirmPasswordField").classList.toggle("hidden", next !== "recovery");
+    submit.textContent = next === "signup" ? "Criar conta" : next === "recovery" ? "Salvar nova senha" : "Entrar";
+    $("authSwitch").classList.toggle("hidden", next === "recovery");
+    $("authPassword").required = next !== "recovery";
+    $("authNewPassword").required = next === "recovery";
+    $("showSignup").classList.toggle("hidden", next !== "login");
+    $("showLogin").classList.toggle("hidden", next !== "signup");
+    $("forgotPassword").classList.toggle("hidden", next !== "login");
+    setMessage("");
+  };
 
-  function openPanel() {
-    overlay.style.display = "flex";
-    message("");
-  }
-
-  function closePanel() {
-    overlay.style.display = "none";
-  }
-
-  function setMode(newMode) {
-    mode = newMode;
-
-    const signup = mode === "signup";
-    $("mq-auth-title").textContent =
-      signup ? "Criar conta" : "Entrar no MathQuest";
-
-    $("mq-auth-description").textContent = signup
-      ? "Crie sua conta para começar sua jornada."
-      : "Acesse sua conta MathQuest.";
-
-    $("mq-auth-name-area").style.display =
-      signup ? "block" : "none";
-
-    $("mq-auth-password").autocomplete =
-      signup ? "new-password" : "current-password";
-
-    $("mq-auth-submit").textContent =
-      signup ? "Criar minha conta" : "Entrar";
-
-    $("mq-auth-switch").textContent =
-      signup ? "Já tenho uma conta" : "Criar uma conta";
-
-    $("mq-auth-reset").style.display =
-      signup ? "none" : "block";
-
-    message("");
-  }
-
-  function updateButton(user) {
-    currentUser = user || null;
-
-    const button = $("mq-auth-button");
-    if (!button) return;
-
-    button.textContent = user
-      ? "Minha conta"
-      : "Entrar / Cadastrar";
-
-    $("mq-auth-logout").style.display =
-      user ? "block" : "none";
-
-    if (user) {
-      loadProfile(user);
-    }
-  }
-
-  async function loadProfile(user) {
-    const { data, error } = await client
-      .from("profiles")
-      .select("display_name")
-      .eq("id", user.id)
-      .maybeSingle();
-
+  async function showApp(user) {
+    window.MQ_USER = user;
+    const { data, error } = await client.from("profiles").select("id, display_name, avatar").eq("id", user.id).maybeSingle();
     if (error) {
-      console.error("Erro ao carregar perfil:", error.message);
+      setMessage("Sua conta entrou, mas não consegui carregar o perfil. Confira se executou o SQL de configuração no Supabase.", "error");
       return;
     }
-
-    if (data?.display_name) {
-      const name = data.display_name;
-
-      const sideName = $("sideName");
-      const playerName = $("playerName");
-      const avatar = $("avatarInitial");
-
-      if (sideName) sideName.textContent = name;
-      if (playerName) playerName.value = name;
-      if (avatar) avatar.textContent = name.charAt(0).toUpperCase();
-    }
+    window.MQ_PROFILE = data || { id: user.id, display_name: user.user_metadata?.display_name || "Matemático", avatar: null };
+    authScreen.classList.add("hidden");
+    appShell.classList.remove("auth-locked");
+    document.dispatchEvent(new CustomEvent("mathquest:authenticated", { detail: { user, profile: window.MQ_PROFILE } }));
   }
 
-  function init() {
-    const topbar = document.querySelector(".topbar");
-
-    if (!topbar) {
-      console.error("MathQuest: cabeçalho não encontrado.");
-      return;
-    }
-
-    const button = document.createElement("button");
-    button.id = "mq-auth-button";
-    button.type = "button";
-    button.textContent = "Entrar / Cadastrar";
-    button.addEventListener("click", openPanel);
-    topbar.appendChild(button);
-
-    $("mq-auth-close").addEventListener("click", closePanel);
-
-    overlay.addEventListener("click", event => {
-      if (event.target === overlay) closePanel();
-    });
-
-    $("mq-auth-switch").addEventListener("click", () => {
-      setMode(mode === "login" ? "signup" : "login");
-    });
-
-    $("mq-auth-form").addEventListener("submit", async event => {
-      event.preventDefault();
-
-      const email = $("mq-auth-email").value.trim();
-      const password = $("mq-auth-password").value;
-      const name = $("mq-auth-name").value.trim();
-
-      const submit = $("mq-auth-submit");
-      submit.disabled = true;
-      message("Aguarde...");
-
-      try {
-        if (mode === "signup") {
-          if (name.length < 2) {
-            throw new Error("Digite um nome com pelo menos 2 caracteres.");
-          }
-
-          const { data, error } = await client.auth.signUp({
-            email,
-            password,
-            options: {
-              data: { display_name: name }
-            }
-          });
-
-          if (error) throw error;
-
-          if (data.session) {
-            message("Conta criada com sucesso!");
-            closePanel();
-          } else {
-            message("Cadastro iniciado! Confira seu e-mail para confirmar a conta.");
-          }
-        } else {
-          const { error } = await client.auth.signInWithPassword({
-            email,
-            password
-          });
-
-          if (error) throw error;
-
-          message("Login realizado!");
-          closePanel();
-        }
-      } catch (error) {
-        message(error.message || "Não foi possível concluir.", true);
-      } finally {
-        submit.disabled = false;
-      }
-    });
-
-    $("mq-auth-reset").addEventListener("click", async () => {
-      const email = $("mq-auth-email").value.trim();
-
-      if (!email) {
-        message("Digite seu e-mail primeiro.", true);
-        return;
-      }
-
-      try {
-        const { error } = await client.auth.resetPasswordForEmail(email);
-
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const email = $("authEmail").value.trim();
+    const password = $("authPassword").value;
+    submit.disabled = true;
+    setMessage("Aguarde...");
+    try {
+      if (mode === "signup") {
+        const displayName = $("authDisplayName").value.trim();
+        if (displayName.length < 2) throw new Error("Digite um nome com pelo menos 2 caracteres.");
+        const { data, error } = await client.auth.signUp({
+          email, password,
+          options: { data: { display_name: displayName }, emailRedirectTo: window.location.href.split("#")[0] }
+        });
         if (error) throw error;
-
-        message("Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.");
-      } catch (error) {
-        message(error.message || "Erro ao solicitar recuperação.", true);
+        if (data.session) await showApp(data.user);
+        else setMessage("Cadastro iniciado! Confira seu e-mail e confirme a conta antes de entrar.", "success");
+      } else if (mode === "login") {
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        await showApp(data.user);
+      } else {
+        const newPassword = $("authNewPassword").value;
+        if (newPassword.length < 8) throw new Error("A nova senha precisa ter pelo menos 8 caracteres.");
+        const { error } = await client.auth.updateUser({ password: newPassword });
+        if (error) throw error;
+        setMode("login");
+        setMessage("Senha atualizada. Entre com sua nova senha.", "success");
       }
-    });
+    } catch (error) {
+      setMessage(error.message || "Não foi possível concluir. Tente novamente.", "error");
+    } finally { submit.disabled = false; }
+  });
 
-    $("mq-auth-logout").addEventListener("click", async () => {
-      const { error } = await client.auth.signOut();
+  $("showSignup").addEventListener("click", () => setMode("signup"));
+  $("showLogin").addEventListener("click", () => setMode("login"));
+  $("forgotPassword").addEventListener("click", async () => {
+    const email = $("authEmail").value.trim();
+    if (!email) return setMessage("Digite seu e-mail primeiro para receber o link de recuperação.", "error");
+    const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: window.location.href.split("#")[0] });
+    setMessage(error ? error.message : "Enviamos um link de recuperação para seu e-mail.", error ? "error" : "success");
+  });
+  $("logoutBtn").addEventListener("click", async () => {
+    const { error } = await client.auth.signOut();
+    if (error) return alert("Não foi possível sair: " + error.message);
+    window.MQ_USER = null; window.MQ_PROFILE = null;
+    window.location.reload();
+  });
 
-      if (error) {
-        message(error.message, true);
-        return;
-      }
+  client.auth.onAuthStateChange(async (event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      authScreen.classList.remove("hidden"); appShell.classList.add("auth-locked"); setMode("recovery");
+    } else if (session?.user && !window.MQ_USER) {
+      await showApp(session.user);
+    } else if (!session && window.MQ_USER) {
+      window.MQ_USER = null; window.MQ_PROFILE = null;
+      authScreen.classList.remove("hidden"); appShell.classList.add("auth-locked");
+    }
+  });
 
-      message("Você saiu da sua conta.");
-      closePanel();
-    });
+  (async () => {
+    const { data, error } = await client.auth.getSession();
+    if (error) setMessage(error.message, "error");
+    if (data.session?.user) await showApp(data.session.user);
+    else { authScreen.classList.remove("hidden"); appShell.classList.add("auth-locked"); }
+  })();
 
-    client.auth.onAuthStateChange((event, session) => {
-      updateButton(session?.user || null);
-    });
-
-    client.auth.getSession().then(({ data, error }) => {
-      if (error) {
-        console.error("Erro ao verificar sessão:", error.message);
-        return;
-      }
-
-      updateButton(data.session?.user || null);
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  window.MQ_UPDATE_PROFILE_NAME = async (name) => {
+    if (!window.MQ_USER) return { error: new Error("Sessão não encontrada.") };
+    const { data, error } = await client.from("profiles").update({ display_name: name }).eq("id", window.MQ_USER.id).select("id, display_name, avatar").single();
+    if (!error) window.MQ_PROFILE = data;
+    return { data, error };
+  };
 })();
