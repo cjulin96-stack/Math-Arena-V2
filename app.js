@@ -1,9 +1,11 @@
 // ==========================================
-// APP.JS - PARTE 1: SISTEMA, LOGIN E PERFIL
+// APP.JS - MATH ARENA V2.0 (COMPLETO)
 // ==========================================
 
+// --- UTILITÁRIOS ---
 function mostrarToast(mensagem, tipo = 'success') {
     const container = document.getElementById('toast-container');
+    if (!container) return;
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     const icone = tipo === 'success' ? '✅' : '❌';
@@ -12,6 +14,15 @@ function mostrarToast(mensagem, tipo = 'success') {
     setTimeout(() => { toast.style.animation = 'fadeOut 0.3s ease-out forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
+function getNivel(xp) {
+    if (xp >= 5000) return { nivel: 10, nome: 'Mestre', xpAtual: xp, xpProx: 10000 };
+    if (xp >= 2500) return { nivel: 8, nome: 'Diamante', xpAtual: xp, xpProx: 5000 };
+    if (xp >= 1000) return { nivel: 5, nome: 'Platina', xpAtual: xp, xpProx: 2500 };
+    if (xp >= 300) return { nivel: 3, nome: 'Prata', xpAtual: xp, xpProx: 1000 };
+    return { nivel: 1, nome: 'Bronze', xpAtual: xp, xpProx: 300 };
+}
+
+// --- AUTENTICAÇÃO ---
 async function fazerCadastro() {
     const email = document.getElementById('auth-email').value.trim();
     const senha = document.getElementById('auth-pass').value;
@@ -41,6 +52,7 @@ async function sair() {
     location.reload();
 }
 
+// --- PERFIL E DASHBOARD ---
 async function carregarPerfil() {
     if (!jogador.id) return;
     const { data, error } = await banco.from('ranking').select('*').eq('user_id', jogador.id).maybeSingle();
@@ -58,21 +70,12 @@ async function carregarPerfil() {
         jogador.streak = data.streak || 0;
         jogador.ultimo_login = data.ultimo_login || null;
     } else {
-        // Cria o perfil se for o primeiro login
         await banco.from('ranking').insert([{ 
             user_id: jogador.id, nome: jogador.nome, xp: 0, moedas: 0, 
             avatar: '🐱', moldura_equipada: 'padrao', molduras_compradas: ['padrao'],
             avatares_desbloqueados: ['🐱'], aulas_concluidas: [], streak: 0
         }]);
     }
-}
-
-function getNivel(xp) {
-    if (xp >= 5000) return { nivel: 10, nome: 'Mestre', xpAtual: xp, xpProx: 10000 };
-    if (xp >= 2500) return { nivel: 8, nome: 'Diamante', xpAtual: xp, xpProx: 5000 };
-    if (xp >= 1000) return { nivel: 5, nome: 'Platina', xpAtual: xp, xpProx: 2500 };
-    if (xp >= 300) return { nivel: 3, nome: 'Prata', xpAtual: xp, xpProx: 1000 };
-    return { nivel: 1, nome: 'Bronze', xpAtual: xp, xpProx: 300 };
 }
 
 async function verificarLoginDiario() {
@@ -88,8 +91,6 @@ async function verificarLoginDiario() {
 
         jogador.ultimo_login = hoje;
         await banco.from('ranking').update({ streak: jogador.streak, ultimo_login: jogador.ultimo_login }).eq('user_id', jogador.id);
-        
-        if (jogador.streak > 1) { mostrarToast(`Sequência de ${jogador.streak} dias! 🔥`, "success"); }
     }
 }
 
@@ -112,14 +113,16 @@ async function atualizarDashboard() {
     await carregarPerfil();
     await verificarLoginDiario();
     
-    document.getElementById('home-nome').innerText = jogador.nome;
-    document.getElementById('home-avatar').innerText = jogador.avatar;
-    document.getElementById('perfil-avatar').innerText = jogador.avatar;
-    document.getElementById('perfil-nome-input').value = jogador.nome;
-    document.getElementById('home-moedas').innerText = jogador.moedas;
-    document.getElementById('loja-moedas').innerText = jogador.moedas;
-    document.getElementById('home-streak').innerText = `🔥 ${jogador.streak || 0}`;
+    // Atualiza textos da Home e Perfil
+    if(document.getElementById('home-nome')) document.getElementById('home-nome').innerText = jogador.nome;
+    if(document.getElementById('home-avatar')) document.getElementById('home-avatar').innerText = jogador.avatar;
+    if(document.getElementById('perfil-avatar')) document.getElementById('perfil-avatar').innerText = jogador.avatar;
+    if(document.getElementById('perfil-nome-input')) document.getElementById('perfil-nome-input').value = jogador.nome;
+    if(document.getElementById('home-moedas')) document.getElementById('home-moedas').innerText = jogador.moedas;
+    if(document.getElementById('loja-moedas')) document.getElementById('loja-moedas').innerText = jogador.moedas;
+    if(document.getElementById('home-streak')) document.getElementById('home-streak').innerText = `🔥 ${jogador.streak || 0}`;
     
+    // Atualiza Nível e XP
     const infoNivel = getNivel(jogador.xp);
     if (infoNivel.nivel > jogador.nivel && jogador.nivel !== 1) {
         jogador.moedas += 100; 
@@ -128,18 +131,19 @@ async function atualizarDashboard() {
     }
     
     jogador.nivel = infoNivel.nivel;
-    document.getElementById('home-nivel').innerText = `Nível ${infoNivel.nivel} - ${infoNivel.nome}`;
-    document.getElementById('home-xp-txt').innerText = `${infoNivel.xpAtual} / ${infoNivel.xpProx} XP`;
-    document.getElementById('home-xp-bar').style.width = `${(infoNivel.xpAtual / infoNivel.xpProx) * 100}%`;
+    if(document.getElementById('home-nivel')) document.getElementById('home-nivel').innerText = `Nível ${infoNivel.nivel} - ${infoNivel.nome}`;
+    if(document.getElementById('home-xp-txt')) document.getElementById('home-xp-txt').innerText = `${infoNivel.xpAtual} / ${infoNivel.xpProx} XP`;
+    if(document.getElementById('home-xp-bar')) document.getElementById('home-xp-bar').style.width = `${(infoNivel.xpAtual / infoNivel.xpProx) * 100}%`;
     
     renderizarMoldura('home-frame', jogador.moldura_equipada);
     renderizarMoldura('perfil-frame', jogador.moldura_equipada);
     
-    // Chama as funções de renderização das outras abas
-    if (typeof renderizarAcademia === 'function') renderizarAcademia();
-    if (typeof renderizarSeletorMolduras === 'function') renderizarSeletorMolduras();
-    if (typeof renderizarSeletorAvatares === 'function') renderizarSeletorAvatares();
-    if (typeof renderizarLoja === 'function') renderizarLoja();
+    // Atualiza as outras telas
+    renderizarAcademia();
+    renderizarSeletorMolduras();
+    renderizarSeletorAvatares();
+    renderizarLoja();
+    renderizarRanking();
 }
 
 let timerSalvar;
@@ -150,14 +154,15 @@ function salvarNomeDelay() {
         if (novoNome === "") return;
         jogador.nome = novoNome;
         await banco.from('ranking').update({ nome: novoNome }).eq('user_id', jogador.id);
-        document.getElementById('home-nome').innerText = novoNome;
+        if(document.getElementById('home-nome')) document.getElementById('home-nome').innerText = novoNome;
         mostrarToast("Nome salvo!", "success");
     }, 1500);
 }
 
 function mudarAba(idTela, element) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(idTela).classList.add('active');
+    const tela = document.getElementById(idTela);
+    if (tela) tela.classList.add('active');
     
     if (element) {
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -167,18 +172,9 @@ function mudarAba(idTela, element) {
     if (idTela === 'tela-home' || idTela === 'tela-perfil' || idTela === 'tela-loja') { 
         atualizarDashboard(); 
     }
-    if (idTela === 'tela-loja' && typeof renderizarLoja === 'function') renderizarLoja();
-    if (idTela === 'tela-ranking' && typeof renderizarRanking === 'function') renderizarRanking();
-    if (idTela === 'tela-academia' && typeof renderizarAcademia === 'function') renderizarAcademia();
-    if (idTela === 'tela-guarda-roupa') {
-        if (typeof renderizarSeletorAvatares === 'function') renderizarSeletorAvatares();
-        if (typeof renderizarSeletorMolduras === 'function') renderizarSeletorMolduras();
-    }
-}// ==========================================
-// APP.JS - PARTE 2: LOJA, ACADEMIA E INÍCIO
-// ==========================================
+}
 
-// --- LOJA ---
+// --- LOJA E COFRE ---
 function mudarAbaLoja(tipo, botao) {
     abaLojaAtual = tipo;
     document.querySelectorAll('.tab-loja').forEach(b => b.classList.remove('ativa'));
@@ -187,7 +183,8 @@ function mudarAbaLoja(tipo, botao) {
 }
 
 function renderizarLoja() {
-    document.getElementById('loja-moedas').innerText = jogador.moedas || 0;
+    const lojaMoedas = document.getElementById('loja-moedas');
+    if (lojaMoedas) lojaMoedas.innerText = jogador.moedas || 0;
     const container = document.getElementById('lista-loja');
     if (!container) return;
     
@@ -257,7 +254,6 @@ async function comprarItem(id) {
     }
 }
 
-// --- GUARDA-ROUPA ---
 function renderizarSeletorAvatares() {
     const container = document.getElementById('seletor-avatares');
     if (!container) return;
@@ -334,23 +330,27 @@ async function renderizarRanking() {
     const rank2 = document.getElementById('rank-2');
     const rank3 = document.getElementById('rank-3');
     const lista = document.getElementById('lista-ranking');
+    if (!lista) return;
+    
     lista.innerHTML = '';
-    rank1.style.display = 'none'; rank2.style.display = 'none'; rank3.style.display = 'none';
+    if(rank1) rank1.style.display = 'none'; 
+    if(rank2) rank2.style.display = 'none'; 
+    if(rank3) rank3.style.display = 'none';
 
     data.forEach((user, index) => {
         const pos = index + 1;
         const avatarEmoji = user.avatar || '🐱';
-        if (pos === 1) {
+        if (pos === 1 && rank1) {
             rank1.style.display = 'flex';
             rank1.querySelector('.podium-name').innerText = user.nome;
             rank1.querySelector('.podium-xp').innerText = `${user.xp} XP`;
             rank1.querySelector('.podium-avatar').innerHTML = `<div style="font-size: 40px;">${avatarEmoji}</div>`;
-        } else if (pos === 2) {
+        } else if (pos === 2 && rank2) {
             rank2.style.display = 'flex';
             rank2.querySelector('.podium-name').innerText = user.nome;
             rank2.querySelector('.podium-xp').innerText = `${user.xp} XP`;
             rank2.querySelector('.podium-avatar').innerHTML = `<div style="font-size: 30px;">${avatarEmoji}</div>`;
-        } else if (pos === 3) {
+        } else if (pos === 3 && rank3) {
             rank3.style.display = 'flex';
             rank3.querySelector('.podium-name').innerText = user.nome;
             rank3.querySelector('.podium-xp').innerText = `${user.xp} XP`;
@@ -367,7 +367,9 @@ async function renderizarRanking() {
     });
 }
 
-// --- ACADEMIA ---
+// --- ACADEMIA E RESULTADOS ---
+let tempoInicioAula = 0;
+
 function renderizarAcademia() {
     const container = document.getElementById('trilha-academia');
     if (!container) return;
@@ -401,6 +403,7 @@ function abrirAula(id) {
     const aula = ACADEMIA_DB.find(a => a.id === id);
     if (!aula) return;
     
+    tempoInicioAula = Date.now();
     aulaAtualId = id;
     document.getElementById('modal-aula-titulo').innerText = aula.titulo;
     document.getElementById('modal-aula-conteudo').innerText = aula.conteudo;
@@ -415,7 +418,7 @@ function abrirAula(id) {
     } else {
         btn.innerText = `Concluir Aula (+${aula.xp} XP)`;
         btn.disabled = false;
-        btn.style.background = '#58cc02'; // Cor do Duolingo
+        btn.style.background = '#58cc02';
     }
     
     document.getElementById('modal-aula').style.display = 'flex';
@@ -426,40 +429,6 @@ function fecharAula() {
     aulaAtualId = null;
 }
 
-// Variável para contar o tempo da aula
-let tempoInicioAula = 0;
-
-// Sobrescreve a função abrirAula antiga para adicionar o cronômetro
-// Variável para contar o tempo da aula
-let tempoInicioAula = 0;
-
-// Substitua a sua função abrirAula inteira por esta:
-function abrirAula(id) {
-    const aula = ACADEMIA_DB.find(a => a.id === id);
-    if (!aula) return;
-    
-    tempoInicioAula = Date.now(); // Inicia o cronômetro aqui
-    aulaAtualId = id;
-    document.getElementById('modal-aula-titulo').innerText = aula.titulo;
-    document.getElementById('modal-aula-conteudo').innerText = aula.conteudo;
-    
-    const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aula.id);
-    const btn = document.getElementById('modal-aula-btn');
-    
-    if (isConcluida) {
-        btn.innerText = 'Aula Já Concluída ✔';
-        btn.disabled = true;
-        btn.style.background = '#e5e5e5';
-    } else {
-        btn.innerText = `Concluir Aula (+${aula.xp} XP)`;
-        btn.disabled = false;
-        btn.style.background = '#58cc02'; // Cor do Duolingo
-    }
-    
-    document.getElementById('modal-aula').style.display = 'flex';
-}
-
-// E substitua a sua concluirAulaAtual por esta:
 async function concluirAulaAtual() {
     if (!aulaAtualId) return;
     const aula = ACADEMIA_DB.find(a => a.id === aulaAtualId);
@@ -469,14 +438,12 @@ async function concluirAulaAtual() {
         return;
     }
 
-    // Calcula o tempo
     const tempoFinal = Date.now();
     const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
     const minutos = Math.floor(segundosTotais / 60);
     const segundos = segundosTotais % 60;
     const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 
-    // Recompensas
     const moedasGanhas = 10;
     
     if (!jogador.aulas_concluidas) jogador.aulas_concluidas = [];
@@ -535,73 +502,6 @@ function criarConfetes() {
     }
 }
 
-    // Calcula o tempo
-    const tempoFinal = Date.now();
-    const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
-    const minutos = Math.floor(segundosTotais / 60);
-    const segundos = segundosTotais % 60;
-    const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
-    // Calcula recompensas
-    const moedasGanhas = 10; // 10 moedas por aula (pode mudar depois)
-    
-    if (!jogador.aulas_concluidas) jogador.aulas_concluidas = [];
-    jogador.aulas_concluidas.push(aula.id);
-    jogador.xp += aula.xp;
-    jogador.moedas += moedasGanhas;
-
-    await banco.from('ranking').update({ 
-        aulas_concluidas: jogador.aulas_concluidas,
-        xp: jogador.xp,
-        moedas: jogador.moedas
-    }).eq('user_id', jogador.id);
-
-    fecharAula(); // Fecha o pop-up da lição
-    mostrarResultado(aula.xp, moedasGanhas, tempoFormatado, "1 / 1"); // Abre a tela de vitória
-}
-
-function mostrarResultado(xp, moedas, tempo, acertos) {
-    document.getElementById('resultado-tempo').innerText = tempo;
-    document.getElementById('resultado-xp').innerText = `+${xp} XP`;
-    document.getElementById('resultado-moedas').innerText = `+${moedas} 🪙`;
-    document.getElementById('resultado-acertos').innerText = acertos;
-    document.getElementById('resultado-precisao').innerText = "100%"; // Por enquanto, já que não tem quiz ainda
-    
-    document.getElementById('modal-resultado').style.display = 'flex';
-    criarConfetes();
-}
-
-function fecharResultado() {
-    document.getElementById('modal-resultado').style.display = 'none';
-    atualizarDashboard();
-}
-
-function proximaAula() {
-    document.getElementById('modal-resultado').style.display = 'none';
-    atualizarDashboard();
-    // Aqui a gente pode evoluir para abrir a próxima aula automaticamente depois
-}
-
-// Função que cria a chuva de confetes
-function criarConfetes() {
-    const container = document.getElementById('confetti-container');
-    container.innerHTML = '';
-    const cores = ['#00f0ff', '#7000ff', '#ff003c', '#ffb800', '#00ff88'];
-    
-    for (let i = 0; i < 50; i++) {
-        const confete = document.createElement('div');
-        confete.classList.add('confetti');
-        confete.style.left = Math.random() * 100 + 'vw';
-        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
-        confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        confete.style.animationDelay = (Math.random() * 0.5) + 's';
-        
-        // Formas diferentes
-        if (Math.random() > 0.5) confete.style.borderRadius = '50%';
-        
-        container.appendChild(confete);
-    }
-}
 // --- INICIALIZAÇÃO ---
 window.onload = () => {
     banco.auth.onAuthStateChange((event, session) => {
