@@ -1,8 +1,16 @@
 // ==========================================
-// APP.JS - MATH ARENA V2.0 (COMPLETO)
+// APP.JS - PARTE 1
 // ==========================================
 
-// --- UTILITÁRIOS ---
+// Variáveis de estado do Jogo
+let tempoInicioAula = 0;
+let questoesAtuais = [];
+let indiceQuestaoAtual = 0;
+let acertosDesafio = 0;
+let opcaoSelecionada = null;
+let botaoSelecionado = null;
+let aulaAtualId = null;
+
 function mostrarToast(mensagem, tipo = 'success') {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -67,13 +75,14 @@ async function carregarPerfil() {
         jogador.molduras_desbloqueadas = data.molduras_compradas || ['padrao'];
         jogador.avatares_desbloqueados = data.avatares_desbloqueados || ['🐱'];
         jogador.aulas_concluidas = data.aulas_concluidas || [];
+        jogador.vidas = data.vidas !== undefined ? data.vidas : 5;
         jogador.streak = data.streak || 0;
         jogador.ultimo_login = data.ultimo_login || null;
     } else {
         await banco.from('ranking').insert([{ 
             user_id: jogador.id, nome: jogador.nome, xp: 0, moedas: 0, 
             avatar: '🐱', moldura_equipada: 'padrao', molduras_compradas: ['padrao'],
-            avatares_desbloqueados: ['🐱'], aulas_concluidas: [], streak: 0
+            avatares_desbloqueados: ['🐱'], aulas_concluidas: [], streak: 0, vidas: 5
         }]);
     }
 }
@@ -113,7 +122,6 @@ async function atualizarDashboard() {
     await carregarPerfil();
     await verificarLoginDiario();
     
-    // Atualiza textos da Home e Perfil
     if(document.getElementById('home-nome')) document.getElementById('home-nome').innerText = jogador.nome;
     if(document.getElementById('home-avatar')) document.getElementById('home-avatar').innerText = jogador.avatar;
     if(document.getElementById('perfil-avatar')) document.getElementById('perfil-avatar').innerText = jogador.avatar;
@@ -121,8 +129,8 @@ async function atualizarDashboard() {
     if(document.getElementById('home-moedas')) document.getElementById('home-moedas').innerText = jogador.moedas;
     if(document.getElementById('loja-moedas')) document.getElementById('loja-moedas').innerText = jogador.moedas;
     if(document.getElementById('home-streak')) document.getElementById('home-streak').innerText = `🔥 ${jogador.streak || 0}`;
+    if(document.getElementById('home-vidas')) document.getElementById('home-vidas').innerText = `❤️ ${jogador.vidas}`;
     
-    // Atualiza Nível e XP
     const infoNivel = getNivel(jogador.xp);
     if (infoNivel.nivel > jogador.nivel && jogador.nivel !== 1) {
         jogador.moedas += 100; 
@@ -138,12 +146,10 @@ async function atualizarDashboard() {
     renderizarMoldura('home-frame', jogador.moldura_equipada);
     renderizarMoldura('perfil-frame', jogador.moldura_equipada);
     
-    // Atualiza as outras telas
     renderizarAcademia();
     renderizarSeletorMolduras();
     renderizarSeletorAvatares();
     renderizarLoja();
-    renderizarRanking();
 }
 
 let timerSalvar;
@@ -169,11 +175,242 @@ function mudarAba(idTela, element) {
         element.classList.add('active');
     }
 
-    if (idTela === 'tela-home' || idTela === 'tela-perfil' || idTela === 'tela-loja') { 
-        atualizarDashboard(); 
+    if (idTela === 'tela-home' || idTela === 'tela-perfil' || idTela === 'tela-loja') { atualizarDashboard(); }
+    if (idTela === 'tela-ranking') renderizarRanking();
+}
+
+// --- ACADEMIA: RENDERIZAR TRILHA ---
+function renderizarAcademia() {
+    const container = document.getElementById('trilha-academia');
+    if (!container) return;
+    container.innerHTML = '';
+
+    UNIDADES_DB.forEach((unidade, uIndex) => {
+        // Cabeçalho da Unidade
+        const unidadeHeader = document.createElement('div');
+        unidadeHeader.style.cssText = `background: ${unidade.cor}; color: #000; padding: 15px; border-radius: 15px; font-weight: 800; font-size: 18px; margin-top: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 0 rgba(0,0,0,0.3);`;
+        unidadeHeader.innerHTML = `<span>Unidade ${unidade.unidade}: ${unidade.titulo}</span> <span>📖</span>`;
+        container.appendChild(unidadeHeader);
+
+        // Lições da Unidade
+        unidade.licoes.forEach((licao) => {
+            const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(licao.id);
+            
+            // Lógica de bloqueio: A primeira lição da primeira unidade é livre. As outras dependem da anterior.
+            // Para simplificar, vamos usar a ordem global das lições.
+            let indexGlobal = 0;
+            UNIDADES_DB.forEach(u => u.licoes.forEach(l => { if(l.id === licao.id) { /* find global index */ } }));
+            
+            // Bloqueio simples: se for a lição id 1, liberada. Se não, verifica se a lição id-1 está concluída.
+            let isLiberada = (licao.id === 1) || (jogador.aulas_concluidas && jogador.aulas_concluidas.includes(licao.id - 1));
+
+            const btn = document.createElement('div');
+            btn.className = `aula-btn ${isConcluida ? 'concluida' : isLiberada ? 'liberada' : 'bloqueada'}`;
+            
+            // Adiciona um brilho se estiver liberada mas não concluída
+            if (isLiberada && !isConcluida) {
+                btn.style.background = unidade.cor;
+                btn.style.borderColor = unidade.cor;
+            }
+
+            if (isLiberada) {
+                btn.innerHTML = `<span style="font-size: 28px;">${isConcluida ? '⭐' : '📖'}</span><span style="font-size: 10px; font-weight: bold; margin-top: 2px;">${licao.titulo}</span>`;
+                btn.onclick = () => abrirAula(licao.id); 
+            } else {
+                btn.innerHTML = `<span style="font-size: 24px;">🔒</span>`;
+            }
+
+            // Linha de conexão entre aulas
+            const line = document.createElement('div');
+            line.className = 'linha-conexao';
+            container.appendChild(line);
+
+            container.appendChild(btn);
+        });
+    });
+}
+
+function abrirAula(id) {
+    let aulaEncontrada = null;
+    UNIDADES_DB.forEach(u => {
+        const found = u.licoes.find(l => l.id === id);
+        if (found) aulaEncontrada = found;
+    });
+
+    if (!aulaEncontrada) return;
+    
+    aulaAtualId = id;
+    tempoInicioAula = Date.now();
+    
+    // Se já concluiu, não abre o mini-jogo de novo, só avisa
+    const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aulaEncontrada.id);
+    if (isConcluida) {
+        mostrarToast("Você já concluiu esta lição! 🌟", "success");
+        return;
+    }
+
+    if (jogador.vidas <= 0) {
+        mostrarToast("Você não tem vidas! Espere um pouco.", "error");
+        return;
+    }
+
+    iniciarDesafio(aulaEncontrada);
+}
+
+function iniciarDesafio(aula) {
+    questoesAtuais = aula.questoes;
+    indiceQuestaoAtual = 0;
+    acertosDesafio = 0;
+    
+    document.getElementById('tela-desafio').classList.add('active');
+    document.getElementById('desafio-footer').style.display = 'block';
+    document.getElementById('desafio-progresso').style.width = '0%';
+    
+    carregarQuestao();
+}
+
+function carregarQuestao() {
+    if (indiceQuestaoAtual >= questoesAtuais.length) {
+        finalizarDesafio();
+        return;
+    }
+
+    const q = questoesAtuais[indiceQuestaoAtual];
+    document.getElementById('desafio-progresso').style.width = `${(indiceQuestaoAtual / questoesAtuais.length) * 100}%`;
+    
+    // Esconde todos os tipos de jogo
+    document.getElementById('jogo-pares').style.display = 'none';
+    document.getElementById('jogo-completar').style.display = 'none';
+    document.getElementById('jogo-multipla').style.display = 'none';
+    
+    // Reseta botão de verificar
+    const btnVerificar = document.getElementById('btn-verificar-desafio');
+    btnVerificar.innerText = 'VERIFICAR';
+    btnVerificar.disabled = true;
+    btnVerificar.onclick = verificarRespostaDesafio;
+    opcaoSelecionada = null;
+    botaoSelecionado = null;
+
+    if (q.tipo === 'multipla') {
+        document.getElementById('jogo-multipla').style.display = 'block';
+        document.getElementById('multipla-pergunta').innerText = q.pergunta;
+        const containerOpcoes = document.getElementById('multipla-opcoes');
+        containerOpcoes.innerHTML = '';
+        
+        q.opcoes.forEach((opcao, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-secondary';
+            btn.style.marginTop = '0';
+            btn.innerText = opcao;
+            btn.onclick = () => selecionarOpcao(index, btn);
+            containerOpcoes.appendChild(btn);
+        });
+    } else if (q.tipo === 'completar') {
+        document.getElementById('jogo-completar').style.display = 'block';
+        document.getElementById('completar-pergunta').innerText = q.pergunta;
+        const input = document.getElementById('completar-input');
+        input.value = '';
+        input.oninput = () => {
+            btnVerificar.disabled = input.value.trim() === '';
+        };
     }
 }
 
+function selecionarOpcao(index, btn) {
+    opcaoSelecionada = index;
+    document.querySelectorAll('#multipla-opcoes button').forEach(b => {
+        b.style.borderColor = 'rgba(255,255,255,0.1)';
+        b.style.background = 'rgba(255,255,255,0.05)';
+    });
+    btn.style.borderColor = 'var(--primary)';
+    btn.style.background = 'rgba(0, 240, 255, 0.1)';
+    botaoSelecionado = btn;
+    document.getElementById('btn-verificar-desafio').disabled = false;
+}
+
+async function verificarRespostaDesafio() {
+    const btnVerificar = document.getElementById('btn-verificar-desafio');
+    if (btnVerificar.innerText === 'PRÓXIMA') {
+        indiceQuestaoAtual++;
+        carregarQuestao();
+        return;
+    }
+
+    const q = questoesAtuais[indiceQuestaoAtual];
+    let acertou = false;
+
+    if (q.tipo === 'multipla') {
+        if (opcaoSelecionada === q.correta) acertou = true;
+        if (acertou) {
+            botaoSelecionado.style.borderColor = '#00ff88';
+            botaoSelecionado.style.background = 'rgba(0, 255, 136, 0.2)';
+        } else {
+            botaoSelecionado.style.borderColor = '#ff003c';
+            botaoSelecionado.style.background = 'rgba(255, 0, 60, 0.2)';
+            // Mostra a certa
+            document.querySelectorAll('#multipla-opcoes button')[q.correta].style.borderColor = '#00ff88';
+        }
+    } else if (q.tipo === 'completar') {
+        const val = document.getElementById('completar-input').value.trim();
+        if (val === q.resposta) acertou = true;
+    }
+
+    if (acertou) {
+        acertosDesafio++;
+        mostrarToast("Acertou! +10 XP", "success");
+    } else {
+        jogador.vidas--;
+        mostrarToast("Errou! -1 Vida ❤️", "error");
+        // Atualiza vidas no banco
+        await banco.from('ranking').update({ vidas: jogador.vidas }).eq('user_id', jogador.id);
+        
+        if (jogador.vidas <= 0) {
+            mostrarToast("Suas vidas acabaram! 😭", "error");
+            setTimeout(() => {
+                document.getElementById('tela-desafio').classList.remove('active');
+                document.getElementById('desafio-footer').style.display = 'none';
+                atualizarDashboard();
+            }, 2000);
+            return;
+        }
+    }
+
+    btnVerificar.innerText = 'PRÓXIMA';
+}
+
+async function finalizarDesafio() {
+    document.getElementById('tela-desafio').classList.remove('active');
+    document.getElementById('desafio-footer').style.display = 'none';
+    
+    if (!jogador.aulas_concluidas) jogador.aulas_concluidas = [];
+    if (!jogador.aulas_concluidas.includes(aulaAtualId)) {
+        jogador.aulas_concluidas.push(aulaAtualId);
+    }
+
+    // Recompensas baseadas em acertos
+    const xpGanha = acertosDesafio * 10;
+    const moedasGanhas = acertosDesafio * 5;
+    
+    jogador.xp += xpGanha;
+    jogador.moedas += moedasGanhas;
+
+    await banco.from('ranking').update({ 
+        aulas_concluidas: jogador.aulas_concluidas,
+        xp: jogador.xp,
+        moedas: jogador.moedas,
+        vidas: jogador.vidas
+    }).eq('user_id', jogador.id);
+
+    // Calcula tempo
+    const tempoFinal = Date.now();
+    const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
+    const minutos = Math.floor(segundosTotais / 60);
+    const segundos = segundosTotais % 60;
+    const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+    fecharAula();
+    mostrarResultado(xpGanha, moedasGanhas, tempoFormatado, `${acertosDesafio} / ${questoesAtuais.length}`);
+        }
 // --- LOJA E COFRE ---
 function mudarAbaLoja(tipo, botao) {
     abaLojaAtual = tipo;
@@ -367,107 +604,18 @@ async function renderizarRanking() {
     });
 }
 
-// --- ACADEMIA E RESULTADOS ---
-let tempoInicioAula = 0;
-
-function renderizarAcademia() {
-    const container = document.getElementById('trilha-academia');
-    if (!container) return;
-    container.innerHTML = '';
-
-    ACADEMIA_DB.forEach((aula, index) => {
-        let isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aula.id);
-        let isLiberada = (index === 0) || (jogador.aulas_concluidas && jogador.aulas_concluidas.includes(ACADEMIA_DB[index - 1].id));
-
-        const btn = document.createElement('div');
-        btn.className = `aula-btn ${isConcluida ? 'concluida' : isLiberada ? 'liberada' : 'bloqueada'}`;
-
-        if (isLiberada) {
-            btn.innerHTML = `<span style="font-size: 28px;">📖</span><span style="font-size: 10px; font-weight: bold; margin-top: 2px;">Aula ${index + 1}</span>`;
-            btn.onclick = () => abrirAula(aula.id); 
-        } else {
-            btn.innerHTML = `<span style="font-size: 24px;">🔒</span>`;
-        }
-
-        if (index > 0) {
-            const line = document.createElement('div');
-            line.className = 'linha-conexao';
-            container.appendChild(line);
-        }
-
-        container.appendChild(btn);
-    });
-}
-
-function abrirAula(id) {
-    const aula = ACADEMIA_DB.find(a => a.id === id);
-    if (!aula) return;
-    
-    tempoInicioAula = Date.now();
-    aulaAtualId = id;
-    document.getElementById('modal-aula-titulo').innerText = aula.titulo;
-    document.getElementById('modal-aula-conteudo').innerText = aula.conteudo;
-    
-    const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aula.id);
-    const btn = document.getElementById('modal-aula-btn');
-    
-    if (isConcluida) {
-        btn.innerText = 'Aula Já Concluída ✔';
-        btn.disabled = true;
-        btn.style.background = '#e5e5e5';
-    } else {
-        btn.innerText = `Concluir Aula (+${aula.xp} XP)`;
-        btn.disabled = false;
-        btn.style.background = '#58cc02';
-    }
-    
-    document.getElementById('modal-aula').style.display = 'flex';
-}
-
-function fecharAula() {
-    document.getElementById('modal-aula').style.display = 'none';
-    aulaAtualId = null;
-}
-
-async function concluirAulaAtual() {
-    if (!aulaAtualId) return;
-    const aula = ACADEMIA_DB.find(a => a.id === aulaAtualId);
-    
-    if (jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aula.id)) {
-        fecharAula();
-        return;
-    }
-
-    const tempoFinal = Date.now();
-    const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
-    const minutos = Math.floor(segundosTotais / 60);
-    const segundos = segundosTotais % 60;
-    const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
-    const moedasGanhas = 10;
-    
-    if (!jogador.aulas_concluidas) jogador.aulas_concluidas = [];
-    jogador.aulas_concluidas.push(aula.id);
-    jogador.xp += aula.xp;
-    jogador.moedas += moedasGanhas;
-
-    await banco.from('ranking').update({ 
-        aulas_concluidas: jogador.aulas_concluidas,
-        xp: jogador.xp,
-        moedas: jogador.moedas
-    }).eq('user_id', jogador.id);
-
-    fecharAula();
-    mostrarResultado(aula.xp, moedasGanhas, tempoFormatado, "1 / 1");
-}
-
+// --- TELA DE RESULTADO E CONFETES ---
 function mostrarResultado(xp, moedas, tempo, acertos) {
     document.getElementById('resultado-tempo').innerText = tempo;
     document.getElementById('resultado-xp').innerText = `+${xp} XP`;
     document.getElementById('resultado-moedas').innerText = `+${moedas} 🪙`;
     document.getElementById('resultado-acertos').innerText = acertos;
-    document.getElementById('resultado-precisao').innerText = "100%";
     
+    // Calcula precisão
+    const [acertosNum, totalNum] = acertos.split('/').map(Number);
+    const precisao = totalNum > 0 ? Math.round((acertosNum / totalNum) * 100) : 0;
+    document.getElementById('resultado-precisao').innerText = `${precisao}%`;
+
     document.getElementById('modal-resultado').style.display = 'flex';
     criarConfetes();
 }
@@ -502,6 +650,22 @@ function criarConfetes() {
     }
 }
 
+// --- FUNÇÕES DE APOIO ---
+function mostrarNotificacoes() {
+    mostrarToast("Você não tem novas notificações.", "success");
+}
+
+function cancelarDesafio() {
+    document.getElementById('tela-desafio').classList.remove('active');
+    document.getElementById('desafio-footer').style.display = 'none';
+    fecharAula();
+}
+
+function fecharAula() {
+    document.getElementById('modal-aula').style.display = 'none';
+    aulaAtualId = null;
+}
+
 // --- INICIALIZAÇÃO ---
 window.onload = () => {
     banco.auth.onAuthStateChange((event, session) => {
@@ -513,17 +677,3 @@ window.onload = () => {
         }
     });
 };
-// --- FUNÇÕES DE APOIO (PARA NÃO DAR ERRO) ---
-function mostrarNotificacoes() {
-    mostrarToast("Você não tem novas notificações.", "success");
-}
-
-function cancelarDesafio() {
-    // Por enquanto, só volta para a academia
-    mudarAba('tela-academia');
-}
-
-function verificarRespostaDesafio() {
-    // A lógica do mini-jogo ainda vai ser construída!
-    mostrarToast("Desafio em construção!", "error");
-}
