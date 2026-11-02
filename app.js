@@ -1,8 +1,8 @@
 // ==========================================
-// APP.JS - PARTE 1
+// APP.JS - CONSOLIDADO E CORRIGIDO
 // ==========================================
 
-// Variáveis de estado do Jogo
+// Variáveis de estado do Jogo (Declaradas APENAS UMA VEZ AQUI)
 let tempoInicioAula = 0;
 let questoesAtuais = [];
 let indiceQuestaoAtual = 0;
@@ -10,7 +10,9 @@ let acertosDesafio = 0;
 let opcaoSelecionada = null;
 let botaoSelecionado = null;
 let aulaAtualId = null;
+let abaLojaAtual = 'moldura'; // Faltava essa variável no seu código original!
 
+// --- TOASTS E NÍVEIS ---
 function mostrarToast(mensagem, tipo = 'success') {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -39,7 +41,7 @@ async function fazerCadastro() {
     if (error) { mostrarToast(error.message, "error"); } else { mostrarToast("Conta criada! Faça login.", "success"); }
 }
 
-async function fazerLogin() {
+async function fazerLogin() { // Nome corrigido com "r"
     const email = document.getElementById('auth-email').value.trim();
     const senha = document.getElementById('auth-pass').value;
     if (!email || !senha) { mostrarToast("Preencha e-mail e senha.", "error"); return; }
@@ -186,28 +188,18 @@ function renderizarAcademia() {
     container.innerHTML = '';
 
     UNIDADES_DB.forEach((unidade, uIndex) => {
-        // Cabeçalho da Unidade
         const unidadeHeader = document.createElement('div');
         unidadeHeader.style.cssText = `background: ${unidade.cor}; color: #000; padding: 15px; border-radius: 15px; font-weight: 800; font-size: 18px; margin-top: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 0 rgba(0,0,0,0.3);`;
         unidadeHeader.innerHTML = `<span>Unidade ${unidade.unidade}: ${unidade.titulo}</span> <span>📖</span>`;
         container.appendChild(unidadeHeader);
 
-        // Lições da Unidade
         unidade.licoes.forEach((licao) => {
             const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(licao.id);
-            
-            // Lógica de bloqueio: A primeira lição da primeira unidade é livre. As outras dependem da anterior.
-            // Para simplificar, vamos usar a ordem global das lições.
-            let indexGlobal = 0;
-            UNIDADES_DB.forEach(u => u.licoes.forEach(l => { if(l.id === licao.id) { /* find global index */ } }));
-            
-            // Bloqueio simples: se for a lição id 1, liberada. Se não, verifica se a lição id-1 está concluída.
             let isLiberada = (licao.id === 1) || (jogador.aulas_concluidas && jogador.aulas_concluidas.includes(licao.id - 1));
 
             const btn = document.createElement('div');
             btn.className = `aula-btn ${isConcluida ? 'concluida' : isLiberada ? 'liberada' : 'bloqueada'}`;
             
-            // Adiciona um brilho se estiver liberada mas não concluída
             if (isLiberada && !isConcluida) {
                 btn.style.background = unidade.cor;
                 btn.style.borderColor = unidade.cor;
@@ -220,11 +212,9 @@ function renderizarAcademia() {
                 btn.innerHTML = `<span style="font-size: 24px;">🔒</span>`;
             }
 
-            // Linha de conexão entre aulas
             const line = document.createElement('div');
             line.className = 'linha-conexao';
             container.appendChild(line);
-
             container.appendChild(btn);
         });
     });
@@ -242,7 +232,6 @@ function abrirAula(id) {
     aulaAtualId = id;
     tempoInicioAula = Date.now();
     
-    // Se já concluiu, não abre o mini-jogo de novo, só avisa
     const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aulaEncontrada.id);
     if (isConcluida) {
         mostrarToast("Você já concluiu esta lição! 🌟", "success");
@@ -278,12 +267,10 @@ function carregarQuestao() {
     const q = questoesAtuais[indiceQuestaoAtual];
     document.getElementById('desafio-progresso').style.width = `${(indiceQuestaoAtual / questoesAtuais.length) * 100}%`;
     
-    // Esconde todos os tipos de jogo
     document.getElementById('jogo-pares').style.display = 'none';
     document.getElementById('jogo-completar').style.display = 'none';
     document.getElementById('jogo-multipla').style.display = 'none';
     
-    // Reseta botão de verificar
     const btnVerificar = document.getElementById('btn-verificar-desafio');
     btnVerificar.innerText = 'VERIFICAR';
     btnVerificar.disabled = true;
@@ -347,7 +334,6 @@ async function verificarRespostaDesafio() {
         } else {
             botaoSelecionado.style.borderColor = '#ff003c';
             botaoSelecionado.style.background = 'rgba(255, 0, 60, 0.2)';
-            // Mostra a certa
             document.querySelectorAll('#multipla-opcoes button')[q.correta].style.borderColor = '#00ff88';
         }
     } else if (q.tipo === 'completar') {
@@ -361,7 +347,6 @@ async function verificarRespostaDesafio() {
     } else {
         jogador.vidas--;
         mostrarToast("Errou! -1 Vida ❤️", "error");
-        // Atualiza vidas no banco
         await banco.from('ranking').update({ vidas: jogador.vidas }).eq('user_id', jogador.id);
         
         if (jogador.vidas <= 0) {
@@ -374,7 +359,6 @@ async function verificarRespostaDesafio() {
             return;
         }
     }
-
     btnVerificar.innerText = 'PRÓXIMA';
 }
 
@@ -387,7 +371,6 @@ async function finalizarDesafio() {
         jogador.aulas_concluidas.push(aulaAtualId);
     }
 
-    // Recompensas baseadas em acertos
     const xpGanha = acertosDesafio * 10;
     const moedasGanhas = acertosDesafio * 5;
     
@@ -401,7 +384,6 @@ async function finalizarDesafio() {
         vidas: jogador.vidas
     }).eq('user_id', jogador.id);
 
-    // Calcula tempo
     const tempoFinal = Date.now();
     const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
     const minutos = Math.floor(segundosTotais / 60);
@@ -410,7 +392,8 @@ async function finalizarDesafio() {
 
     fecharAula();
     mostrarResultado(xpGanha, moedasGanhas, tempoFormatado, `${acertosDesafio} / ${questoesAtuais.length}`);
-        }
+}
+
 // --- LOJA E COFRE ---
 function mudarAbaLoja(tipo, botao) {
     abaLojaAtual = tipo;
@@ -611,7 +594,6 @@ function mostrarResultado(xp, moedas, tempo, acertos) {
     document.getElementById('resultado-moedas').innerText = `+${moedas} 🪙`;
     document.getElementById('resultado-acertos').innerText = acertos;
     
-    // Calcula precisão
     const [acertosNum, totalNum] = acertos.split('/').map(Number);
     const precisao = totalNum > 0 ? Math.round((acertosNum / totalNum) * 100) : 0;
     document.getElementById('resultado-precisao').innerText = `${precisao}%`;
@@ -662,7 +644,8 @@ function cancelarDesafio() {
 }
 
 function fecharAula() {
-    document.getElementById('modal-aula').style.display = 'none';
+    const modal = document.getElementById('modal-aula'); // Corrigido
+    if (modal) modal.style.display = 'none'; 
     aulaAtualId = null;
 }
 
