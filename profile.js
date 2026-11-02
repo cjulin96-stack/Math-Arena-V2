@@ -227,17 +227,56 @@
       if ($("playerName")) $("playerName").value = name;
     }
 
-    async function loadProfile() {
-      const { data: sessionData, error: sessionError } =
-        await auth.auth.getSession();
+    
+async function loadProfile() {
+  const { data: sessionData, error: sessionError } =
+    await auth.auth.getSession();
 
-      if (sessionError || !sessionData.session) {
-        $("mq-profile-email").textContent = "Entre na sua conta";
-        $("mq-profile-message").textContent =
-          "Faça login para carregar seu perfil.";
-        return;
-      }
+  if (sessionError || !sessionData.session) {
+    $("mq-profile-email").textContent = "Entre na sua conta";
+    $("mq-profile-message").textContent =
+      "Faça login para carregar seu perfil.";
+    return;
+  }
 
+  const user = sessionData.session.user;
+  $("mq-profile-email").textContent = user.email || "";
+
+  // Cria o registro online do jogador, se ainda não existir.
+  const { data: progressData, error: progressError } =
+    await auth.rpc("initialize_my_progress");
+
+  if (progressError) {
+    $("mq-profile-message").textContent =
+      "Não foi possível inicializar o progresso online.";
+    console.error(
+      "MathQuest progresso:",
+      progressError.message
+    );
+  } else {
+    $("mq-profile-message").textContent =
+      "Conta conectada e registro online inicializado!";
+    console.log("MathQuest progresso online:", progressData);
+  }
+
+  // Carrega o nome salvo no perfil.
+  const { data, error } = await auth
+    .from("profiles")
+    .select("display_name")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    $("mq-profile-message").textContent =
+      "Não foi possível carregar o nome salvo.";
+    console.error("MathQuest perfil:", error.message);
+    return;
+  }
+
+  const name = data?.display_name || "JC-DONO";
+  showName(name);
+}
+     
       const user = sessionData.session.user;
       $("mq-profile-email").textContent = user.email || "";
 
