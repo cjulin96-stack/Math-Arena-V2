@@ -426,6 +426,16 @@ function fecharAula() {
     aulaAtualId = null;
 }
 
+// Variável para contar o tempo da aula
+let tempoInicioAula = 0;
+
+// Sobrescreve a função abrirAula antiga para adicionar o cronômetro
+const abrirAulaAntiga = abrirAula;
+abrirAula = function(id) {
+    tempoInicioAula = Date.now(); // Inicia o cronômetro aqui
+    abrirAulaAntiga(id);
+};
+
 async function concluirAulaAtual() {
     if (!aulaAtualId) return;
     const aula = ACADEMIA_DB.find(a => a.id === aulaAtualId);
@@ -435,21 +445,73 @@ async function concluirAulaAtual() {
         return;
     }
 
+    // Calcula o tempo
+    const tempoFinal = Date.now();
+    const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
+    const minutos = Math.floor(segundosTotais / 60);
+    const segundos = segundosTotais % 60;
+    const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+    // Calcula recompensas
+    const moedasGanhas = 10; // 10 moedas por aula (pode mudar depois)
+    
     if (!jogador.aulas_concluidas) jogador.aulas_concluidas = [];
     jogador.aulas_concluidas.push(aula.id);
     jogador.xp += aula.xp;
+    jogador.moedas += moedasGanhas;
 
     await banco.from('ranking').update({ 
         aulas_concluidas: jogador.aulas_concluidas,
-        xp: jogador.xp
+        xp: jogador.xp,
+        moedas: jogador.moedas
     }).eq('user_id', jogador.id);
 
-    mostrarToast(`Aula concluída! +${aula.xp} XP`, "success");
-    
-    fecharAula();
-    atualizarDashboard(); 
+    fecharAula(); // Fecha o pop-up da lição
+    mostrarResultado(aula.xp, moedasGanhas, tempoFormatado, "1 / 1"); // Abre a tela de vitória
 }
 
+function mostrarResultado(xp, moedas, tempo, acertos) {
+    document.getElementById('resultado-tempo').innerText = tempo;
+    document.getElementById('resultado-xp').innerText = `+${xp} XP`;
+    document.getElementById('resultado-moedas').innerText = `+${moedas} 🪙`;
+    document.getElementById('resultado-acertos').innerText = acertos;
+    document.getElementById('resultado-precisao').innerText = "100%"; // Por enquanto, já que não tem quiz ainda
+    
+    document.getElementById('modal-resultado').style.display = 'flex';
+    criarConfetes();
+}
+
+function fecharResultado() {
+    document.getElementById('modal-resultado').style.display = 'none';
+    atualizarDashboard();
+}
+
+function proximaAula() {
+    document.getElementById('modal-resultado').style.display = 'none';
+    atualizarDashboard();
+    // Aqui a gente pode evoluir para abrir a próxima aula automaticamente depois
+}
+
+// Função que cria a chuva de confetes
+function criarConfetes() {
+    const container = document.getElementById('confetti-container');
+    container.innerHTML = '';
+    const cores = ['#00f0ff', '#7000ff', '#ff003c', '#ffb800', '#00ff88'];
+    
+    for (let i = 0; i < 50; i++) {
+        const confete = document.createElement('div');
+        confete.classList.add('confetti');
+        confete.style.left = Math.random() * 100 + 'vw';
+        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+        confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        confete.style.animationDelay = (Math.random() * 0.5) + 's';
+        
+        // Formas diferentes
+        if (Math.random() > 0.5) confete.style.borderRadius = '50%';
+        
+        container.appendChild(confete);
+    }
+}
 // --- INICIALIZAÇÃO ---
 window.onload = () => {
     banco.auth.onAuthStateChange((event, session) => {
