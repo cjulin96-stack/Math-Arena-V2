@@ -97,35 +97,52 @@
         <button id="modal-aula-btn" class="btn-duolingo" onclick="concluirAulaAtual()">Concluir Aula</button>
     </div>
 <!-- POP-UP DE RESULTADO (FIM DA LIÇÃO) -->
-<div id="modal-resultado" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1001; justify-content: center; align-items: center; padding: 20px; flex-direction: column;">
+<div id="modal-resultado" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1001; justify-content: center; align-items: center; padding: 20px; flex-direction: column; overflow: hidden;">
     
-    <div class="glass result-anim" style="width: 100%; max-width: 400px; text-align: center; border-color: #00ff88; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);">
-        <h1 style="font-size: 40px; margin-bottom: 10px;">🏆</h1>
-        <h2 class="text-gradient" style="font-size: 28px; margin-bottom: 5px;">Lição Concluída!</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Você foi incrível!</p>
+    <!-- Container dos confetes -->
+    <div id="confetti-container"></div>
 
+    <div class="glass result-anim" style="width: 100%; max-width: 400px; text-align: center; border-color: #00ff88; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3); z-index: 2;">
+        <div style="font-size: 50px; margin-bottom: 10px; animation: bounce 1s infinite;">🏆</div>
+        <h2 class="text-gradient" style="font-size: 28px; margin-bottom: 5px;">Lição Concluída!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Você está voando! 🚀</p>
+
+        <!-- Estatísticas principais -->
         <div class="result-stats">
             <div class="result-box">
-                <div style="font-size: 24px; font-weight: bold; color: var(--gold);">⏱️</div>
+                <div style="font-size: 24px;">⏱️</div>
                 <div style="font-size: 12px; color: var(--text-muted);">Tempo</div>
                 <div id="resultado-tempo" style="font-weight: 800; font-size: 16px;">00:00</div>
             </div>
             <div class="result-box">
-                <div style="font-size: 24px; font-weight: bold; color: #00ff88;">🎯</div>
+                <div style="font-size: 24px;">🎯</div>
                 <div style="font-size: 12px; color: var(--text-muted);">Precisão</div>
                 <div id="resultado-precisao" style="font-weight: 800; font-size: 16px;">100%</div>
             </div>
-            <div class="result-box" style="grid-column: span 2; border-color: var(--gold);">
-                <div style="font-size: 12px; color: var(--text-muted);">XP Ganho</div>
-                <div id="resultado-xp" style="font-weight: 800; font-size: 20px; color: var(--gold);">+20 XP</div>
+        </div>
+
+        <!-- Recompensas e Detalhes -->
+        <div class="glass" style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 14px; font-weight: bold; color: var(--primary);">XP Ganho:</span>
+                <span id="resultado-xp" style="font-weight: 800; font-size: 18px; color: #00ff88;">+20 XP</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 14px; font-weight: bold; color: var(--gold);">Moedas Ganhas:</span>
+                <span id="resultado-moedas" style="font-weight: 800; font-size: 18px; color: var(--gold);">+10 🪙</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold; color: var(--text-muted);">Acertos:</span>
+                <span id="resultado-acertos" style="font-weight: 800; font-size: 14px; color: white;">10 / 10</span>
             </div>
         </div>
 
-        <button class="btn-duolingo" style="margin-top: 25px;" onclick="fecharResultado()">CONTINUAR</button>
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+            <button class="btn-secondary" style="width: 50%; margin-top: 0;" onclick="fecharResultado()">VOLTAR À TRILHA</button>
+            <button class="btn-duolingo" style="width: 50%; margin-top: 0;" onclick="proximaAula()">PRÓXIMA AULA</button>
+        </div>
     </div>
 </div>
-</div>
-
 <!-- TELA DO DESAFIO (SISTEMA DE AULAS) -->
 <div id="tela-desafio" class="screen">
     <div class="game-header">
