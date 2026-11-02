@@ -70,6 +70,7 @@
           <div class="profile-metrics"><div><b id="profileXP">0</b><small>XP total</small></div><div><b id="profileCorrect">0</b><small>Acertos</small></div><div><b id="profileAccuracy">0%</b><small>Precisão</small></div><div><b id="profileStreak">0</b><small>Dias seguidos</small></div></div>
           <div class="profile-account"><span>💾</span><div><b>Progresso neste dispositivo</b><small>Seu progresso atual continua salvo localmente. A conexão de conta e nuvem será ativada numa etapa separada, após os testes.</small></div><span class="local-pill">LOCAL</span></div>
           <button class="btn btn-primary" id="editProfileBtn">Editar nome do jogador</button>
+          <div class="account-box" id="accountBox"><div><b id="accountStatus">Conta não conectada</b><small id="accountHint">Crie uma conta para preparar seu acesso em outros dispositivos.</small></div><button class="btn btn-secondary" id="openAccountBtn">Entrar / Criar conta</button></div>
         </div>
       </section>
 
@@ -110,7 +111,14 @@
     </div>
   </div>
   <div id="toast" class="toast" role="status"></div>
+  <div class="account-modal hidden" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+    <div class="account-dialog"><button class="account-close" id="closeAccountBtn" aria-label="Fechar">×</button><p class="eyebrow">SUA IDENTIDADE MATHQUEST</p><h2 id="accountTitle">Entre na sua conta</h2><p class="muted" id="accountDescription">Use seu e-mail para acessar sua conta.</p><form id="accountForm"><label for="accountEmail">E-mail</label><input id="accountEmail" type="email" autocomplete="email" required maxlength="254" placeholder="voce@email.com"><label for="accountPassword">Senha</label><input id="accountPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="Mínimo de 6 caracteres"><label id="accountNameLabel" class="hidden" for="accountDisplayName">Nome do jogador</label><input id="accountDisplayName" class="hidden" maxlength="18" placeholder="Como devemos chamar você?"><button class="btn btn-primary account-submit" id="accountSubmit" type="submit">Entrar</button></form><button class="account-switch" id="accountModeBtn" type="button">Ainda não tem conta? Criar conta</button><p class="account-message" id="accountMessage" role="status"></p><p class="account-note">Nesta etapa, o login é ativado. A sincronização do progresso será adicionada e testada separadamente.</p></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="account.js"></script>
   <script src="questions.js"></script>
   <script src="app.js"></script>
 </body>
-</html>
+        </html>
