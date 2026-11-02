@@ -277,25 +277,7 @@ async function loadProfile() {
   showName(name);
 }
      
-      const user = sessionData.session.user;
-      $("mq-profile-email").textContent = user.email || "";
-
-      const { data, error } = await auth
-        .from("profiles")
-        .select("display_name")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      if (error) {
-        $("mq-profile-message").textContent =
-          "Não foi possível carregar o nome salvo.";
-        console.error("MathQuest perfil:", error.message);
-        return;
-      }
-
-      const name = data?.display_name || "JC-DONO";
-      showName(name);
-    }
+      
 
     $("mq-profile-form").addEventListener("submit", async event => {
       event.preventDefault();
