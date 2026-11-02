@@ -513,3 +513,17 @@ window.onload = () => {
         }
     });
 };
+// --- FUNÇÕES DE APOIO (PARA NÃO DAR ERRO) ---
+function mostrarNotificacoes() {
+    mostrarToast("Você não tem novas notificações.", "success");
+}
+
+function cancelarDesafio() {
+    // Por enquanto, só volta para a academia
+    mudarAba('tela-academia');
+}
+
+function verificarRespostaDesafio() {
+    // A lógica do mini-jogo ainda vai ser construída!
+    mostrarToast("Desafio em construção!", "error");
+}
