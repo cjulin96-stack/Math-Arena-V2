@@ -4,8 +4,8 @@
 
 // 1. CONEXÃO COM O SUPABASE (Coloque seus dados aqui)
 // Substitua as strings abaixo pelas suas credenciais do painel do Supabase
-const SUPABASE_URL = "SUA_URL_DO_SUPABASE_AQUI";
-const SUPABASE_KEY = "SUA_CHAVE_ANON_DO_SUPABASE_AQUI";
+const SUPABASE_URL = "https://zhciurzkzmdenuapzugj.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoY2l1cnprem1kZW51YXB6dWdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NzM0ODIsImV4cCI6MjEwOTA0OTQ4Mn0.bLdz-6jMEXuEFoX9T5DRfRvR1huDY5I-awnutjiQ2dc";
 
 // Inicializa o banco de dados
 const banco = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
