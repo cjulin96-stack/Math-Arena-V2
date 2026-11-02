@@ -430,12 +430,36 @@ function fecharAula() {
 let tempoInicioAula = 0;
 
 // Sobrescreve a função abrirAula antiga para adicionar o cronômetro
-const abrirAulaAntiga = abrirAula;
-abrirAula = function(id) {
-    tempoInicioAula = Date.now(); // Inicia o cronômetro aqui
-    abrirAulaAntiga(id);
-};
+// Variável para contar o tempo da aula
+let tempoInicioAula = 0;
 
+// Substitua a sua função abrirAula inteira por esta:
+function abrirAula(id) {
+    const aula = ACADEMIA_DB.find(a => a.id === id);
+    if (!aula) return;
+    
+    tempoInicioAula = Date.now(); // Inicia o cronômetro aqui
+    aulaAtualId = id;
+    document.getElementById('modal-aula-titulo').innerText = aula.titulo;
+    document.getElementById('modal-aula-conteudo').innerText = aula.conteudo;
+    
+    const isConcluida = jogador.aulas_concluidas && jogador.aulas_concluidas.includes(aula.id);
+    const btn = document.getElementById('modal-aula-btn');
+    
+    if (isConcluida) {
+        btn.innerText = 'Aula Já Concluída ✔';
+        btn.disabled = true;
+        btn.style.background = '#e5e5e5';
+    } else {
+        btn.innerText = `Concluir Aula (+${aula.xp} XP)`;
+        btn.disabled = false;
+        btn.style.background = '#58cc02'; // Cor do Duolingo
+    }
+    
+    document.getElementById('modal-aula').style.display = 'flex';
+}
+
+// E substitua a sua concluirAulaAtual por esta:
 async function concluirAulaAtual() {
     if (!aulaAtualId) return;
     const aula = ACADEMIA_DB.find(a => a.id === aulaAtualId);
@@ -444,6 +468,72 @@ async function concluirAulaAtual() {
         fecharAula();
         return;
     }
+
+    // Calcula o tempo
+    const tempoFinal = Date.now();
+    const segundosTotais = Math.floor((tempoFinal - tempoInicioAula) / 1000);
+    const minutos = Math.floor(segundosTotais / 60);
+    const segundos = segundosTotais % 60;
+    const tempoFormatado = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+    // Recompensas
+    const moedasGanhas = 10;
+    
+    if (!jogador.aulas_concluidas) jogador.aulas_concluidas = [];
+    jogador.aulas_concluidas.push(aula.id);
+    jogador.xp += aula.xp;
+    jogador.moedas += moedasGanhas;
+
+    await banco.from('ranking').update({ 
+        aulas_concluidas: jogador.aulas_concluidas,
+        xp: jogador.xp,
+        moedas: jogador.moedas
+    }).eq('user_id', jogador.id);
+
+    fecharAula();
+    mostrarResultado(aula.xp, moedasGanhas, tempoFormatado, "1 / 1");
+}
+
+function mostrarResultado(xp, moedas, tempo, acertos) {
+    document.getElementById('resultado-tempo').innerText = tempo;
+    document.getElementById('resultado-xp').innerText = `+${xp} XP`;
+    document.getElementById('resultado-moedas').innerText = `+${moedas} 🪙`;
+    document.getElementById('resultado-acertos').innerText = acertos;
+    document.getElementById('resultado-precisao').innerText = "100%";
+    
+    document.getElementById('modal-resultado').style.display = 'flex';
+    criarConfetes();
+}
+
+function fecharResultado() {
+    document.getElementById('modal-resultado').style.display = 'none';
+    atualizarDashboard();
+}
+
+function proximaAula() {
+    document.getElementById('modal-resultado').style.display = 'none';
+    atualizarDashboard();
+}
+
+function criarConfetes() {
+    const container = document.getElementById('confetti-container');
+    if (!container) return;
+    container.innerHTML = '';
+    const cores = ['#00f0ff', '#7000ff', '#ff003c', '#ffb800', '#00ff88'];
+    
+    for (let i = 0; i < 50; i++) {
+        const confete = document.createElement('div');
+        confete.classList.add('confetti');
+        confete.style.left = Math.random() * 100 + 'vw';
+        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+        confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        confete.style.animationDelay = (Math.random() * 0.5) + 's';
+        
+        if (Math.random() > 0.5) confete.style.borderRadius = '50%';
+        
+        container.appendChild(confete);
+    }
+}
 
     // Calcula o tempo
     const tempoFinal = Date.now();
