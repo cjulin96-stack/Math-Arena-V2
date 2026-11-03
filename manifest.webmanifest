@@ -1,0 +1,10 @@
+{
+  "name": "MathQuest Nexus Ultimate",
+  "short_name": "MathQuest",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080d1c",
+  "theme_color": "#080d1c",
+  "lang": "pt-BR",
+  "description": "Plataforma de aprendizagem e desafios de matemática."
+}
