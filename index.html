@@ -1,1 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080d1c">
+  <meta name="description" content="MathQuest Nexus Ultimate — aprenda matemática, treine e acompanhe sua evolução.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>MathQuest 11.0 — Nexus Ultimate</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+    :root{--p:#6848df;--bg:#f6f4fb;--ink:#302849;--mut:#817a98;--line:#e9e5f1;--green:#28b77c;--gold:#ffc85b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Nunito,Arial;color:var(--ink)}
+.app{min-height:100vh;display:grid;grid-template-columns:220px 1fr}
+.side{background:#fff;border-right:1px solid var(--line);padding:18px;position:sticky;top:0;height:100vh}
+.brand{font-size:24px;font-weight:1000;margin-bottom:22px}
+/* ... todo o restante do CSS base, grid, cards, modais, media queries ... */
+    :root{--p:#8b5cf6;--bg:#080d1c;--ink:#f4f2ff;--mut:#a6aec8;--line:rgba(157,174,255,.16);--green:#35e0a1;--gold:#ffd166;--mq-cyan:#43d9ff;--mq-pink:#ff62c0}
+body{background:radial-gradient(...),linear-gradient(145deg,#080d1c,#10152b 55%,#0a1021)}
+.hero{position:relative;overflow:hidden;...}
+.mq-unlock{position:fixed;inset:0;...}
+@keyframes mqFloat{...}
+    #mathquest-nexus-premium{ ... }
+#view-learn .hero{--hero-art:url('data:image/svg+xml;base64,...')}
+#view-arena .hero{--hero-art:url('data:image/svg+xml;base64,...')}
+/* ... dezenas de data-URIs SVG base64 por view ... */
 
+#mathquest-nexus-interactions{/* foco, seleção, focus-visible, dialog animation */}
+    /* MATHQUEST 14.0 — EMPIRE UNIVERSE */
+:root{--mq-glow:#8b5cf6}
+.mq14-intro{...}
+.mq14-mascot{...}
+.mq14-trail{...}
+.mq14-node{...}
+.mq14-shop,.mq14-pet{...}
+@keyframes mqFloat{...}
+<body>
+<section id="authGate" class="auth-gate">...</section>
+<div class="app" id="mathquestApp" style="display:none">
+  <aside class="side">
+    <div class="brand">✦ Math<span>Quest</span> <small>10.5</small></div>
+    <nav id="nav">
+      <button class="nav active" data-view="learn">🗺️ Aprender</button>
+      <!-- ... practice, evolution, arena, missions, achievements, shop, ranking, global, profile, settings ... -->
+    </nav>
+  </aside>
+  <main>
+    <header class="top">
+      <span class="eyebrow">SUA JORNADA MATEMÁTICA</span>
+      <h1 id="pageTitle">Vamos aprender!</h1>
+      <div class="chips">🔥💎⚡❤️</div>
+    </header>
+    <section class="view active" id="view-learn">
+  <div class="hero">...</div>
+  <div class="heading">...</div>
+  <div id="worlds"></div>
+</section>
+<section class="view" id="view-arena">...</section>
+<!-- ... demais views ... -->
+<div class="modal hide" id="lessonModal">...</div>
+<div class="modal hide" id="summaryModal">...</div>
+<div class="toast" id="toast"></div>
+    (()=>{'use strict';
+const W=[['🌱','Mundo Fundamental','Construa sua base',[...]], ...];
+const unitNames=[...];
+const Q=[]; W.forEach(...); // gera questões
+const KEY='mathquest_v1';
+let S=load(), session=null, chosen=null, practice=false, soundOn=...;
+
+function load(){...}
+function renderWorlds(){...}
+function render(){...}
+function start(q,isPractice){...}
+function check(){...}
+function finish(){...}
+                  // MATHQUEST 6.0 + 7.0 — Plano, calendário, ligas
+const nav=$('nav'), main=document.querySelector('main');
+addNav('planner','🗓️ Plano'); addNav('league','🏅 Liga');
+addView('planner', `...`); addView('league', `...`);
+function renderPlanner(){...}
+function renderLeague(){...}
+
+// MATHQUEST 9.0 — Biblioteca
+addNav('library','📚 Biblioteca');
+function renderLibrary(){...}
+
+// MATHQUEST 10.0 — Supabase
+const SUPABASE_URL='https://zhciurzkzmdenuapzugj.supabase.co';
+async function syncCloudProgress(){...}
+async function loadGlobalLeaderboard(){...}
+$('globalLogin').onclick=async()=>{...};
+const LIFE_REGEN_MS=30*60*1000;
+function updateLifeRecovery(){...}
+                              // 10.3 — Conquistas e desafios
+const mqAchievements=[{id:'first',icon:'🌟',...},...];
+function mqPopup(a){...}
+function mqCheckAchievements(){...}
+function mqDailyChallenge(){...}
+
+// 11.0 — Ultimate systems
+(function initMathQuestUltimate(){
+  let sprintTimer=null, sprintEnd=0, sprintActive=false;
+  function startSprint(){...}
+  ...
+})();
+
+// 14.0 — Empire Universe (mascotes vetoriais)
+const mq13PetData=[{emoji:'🐼',name:'Panda',cost:20,...},...];
+function mq13Mascot(pet='🐼',size=''){ return `<svg class="mq13-mascot ...">...</svg>`; }
+renderShop=function(){...};
+start=function(q,isPractice){...};
+question=function(){...};
+check=function(){...};
+finish=function(){...};
+document.title='MathQuest 14.0 — Empire Universe Complete';
+})();
+
+// Service worker
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){ ... }
+                                                                         
