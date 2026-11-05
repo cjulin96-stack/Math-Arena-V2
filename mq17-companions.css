@@ -1,0 +1,23 @@
+/* MathQuest 17.0 — companion reactions */
+.mq17-companion{position:fixed;left:16px;bottom:16px;z-index:100100;display:flex;align-items:flex-end;gap:10px;width:min(390px,calc(100vw - 32px));opacity:0;pointer-events:none;transform:translateY(18px) scale(.97);transition:opacity .25s ease,transform .3s cubic-bezier(.2,.8,.2,1)}
+.mq17-companion.is-visible{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.mq17-avatar{flex:0 0 76px;width:76px;height:88px;display:grid;place-items:center;overflow:hidden;border-radius:20px 20px 8px 20px;background:linear-gradient(145deg,#f1eaff,#dff8ff);border:2px solid #fff;box-shadow:0 8px 24px #17122d35}
+.mq17-avatar svg{width:72px;height:82px;animation:mq17Bob 2.2s ease-in-out infinite;filter:drop-shadow(0 5px 4px #30224b22)}
+.mq17-avatar-fallback{font-size:42px;color:#7653df}
+.mq17-bubble{position:relative;flex:1;min-width:0;padding:12px 14px 11px;border:1px solid #ded7f3;border-radius:17px 17px 17px 5px;background:#fff;color:#29233f;box-shadow:0 10px 28px #17122d25}
+.mq17-bubble:before{content:"";position:absolute;left:-7px;bottom:14px;width:13px;height:13px;transform:rotate(45deg);background:#fff;border-left:1px solid #ded7f3;border-bottom:1px solid #ded7f3}
+.mq17-name{position:relative;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:1000;color:#5b40b6;margin-bottom:4px}
+.mq17-name span{font-size:7px;letter-spacing:1px;color:#aaa2bd}
+.mq17-message{position:relative;font-size:12px;line-height:1.45;font-weight:750;color:#39334d;overflow-wrap:anywhere}
+.mq17-meta{position:relative;margin-top:6px;font-size:7px;letter-spacing:1px;font-weight:950;color:#a29ab6}
+.mq17-dismiss{position:absolute;right:4px;top:-8px;width:24px;height:24px;border:1px solid #e5def5;border-radius:50%;background:#fff;color:#7d7396;font-size:17px;line-height:1;cursor:pointer;pointer-events:auto;box-shadow:0 3px 9px #17122d18}
+.mq17-companion.is-good .mq17-bubble{border-color:#a9e6ce;background:linear-gradient(120deg,#fff,#f0fff8)}
+.mq17-companion.is-good .mq17-name{color:#16865f}
+.mq17-companion.is-good .mq17-bubble:before{background:#f8fffb;border-color:#a9e6ce}
+.mq17-companion.is-wrong .mq17-bubble{border-color:#f0c4cc;background:linear-gradient(120deg,#fff,#fff5f6)}
+.mq17-companion.is-wrong .mq17-name{color:#b04b65}
+.mq17-companion.is-wrong .mq17-bubble:before{background:#fff8f8;border-color:#f0c4cc}
+.mq17-companion.is-intro .mq17-bubble{border-color:#d5c8ff}
+@keyframes mq17Bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+@media(max-width:520px){.mq17-companion{left:10px;bottom:10px;width:calc(100vw - 20px);gap:7px}.mq17-avatar{flex-basis:62px;width:62px;height:74px;border-radius:16px 16px 7px 16px}.mq17-avatar svg{width:60px;height:70px}.mq17-bubble{padding:10px 11px}.mq17-message{font-size:11px}.mq17-name{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.mq17-companion,.mq17-avatar svg{transition:none;animation:none}}
