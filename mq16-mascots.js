@@ -38,7 +38,7 @@ if(data.crystals<m.price){note("Faltam "+(m.price-data.crystals)+" cristais para
 data.crystals-=m.price;data.unlocked.push(id);data.selected=id;save();activeTab="collection";render();note(m.name+" desbloqueado e equipado!");
 }
 function suppressLegacyShop(){
-document.querySelectorAll("h1,h2,h3,h4,h5,h6,[role=heading]").forEach(function(el){
+document.querySelectorAll("h1,h2,h3,h4,h5,h6,[role=heading],button,a,[role=tab],[role=button]").forEach(function(el){
 if(el.dataset.mq16Merged)return;
 var label=(el.textContent||"").trim().toLocaleLowerCase("pt-BR");
 if(label!=="loja de mascote"&&label!=="loja de mascotes")return;
