@@ -13,6 +13,8 @@ var mascots=[
 var fresh=function(){return {crystals:0,unlocked:["nexo"],selected:"nexo"}};
 var read=function(){try{return Object.assign(fresh(),JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){return fresh()}};
 var data=read();
+var today=function(){return new Date().toLocaleDateString("en-CA")};
+try{var priorDaily=JSON.parse(localStorage.getItem("mq15_daily_challenge_v1")||"null");if(priorDaily&&priorDaily.completed&&priorDaily.day===today()&&data.importedDay!==priorDaily.day){data.crystals+=(priorDaily.points||0)/10;data.importedDay=priorDaily.day;localStorage.setItem(KEY,JSON.stringify(data))}}catch(e){}
 var save=function(){localStorage.setItem(KEY,JSON.stringify(data))};
 function markup(){return '<section class="mq16-mascot-hub" id="mq16Hub"><div class="mq16-hub-copy"><span class="mq16-kicker">MATHQUEST 16.0 · COLEÇÃO</span><h2>Seu universo de mascotes</h2><p>Conheça guias com formas, cores e personalidades diferentes. Desbloqueie novos mascotes usando cristais conquistados nos desafios.</p></div><div class="mq16-hub-side"><div class="mq16-crystal-count">💎 <b id="mq16Balance">0</b><small>CRISTAIS</small></div><button type="button" id="mq16Open">ABRIR COLEÇÃO ↗</button></div><div class="mq16-current" id="mq16Current"></div></section><div class="mq16-overlay" id="mq16Overlay" aria-hidden="true"><section class="mq16-shop" role="dialog" aria-modal="true" aria-labelledby="mq16Title"><button class="mq16-x" id="mq16Close" aria-label="Fechar">×</button><span class="mq16-kicker">CENTRAL DE PERSONALIZAÇÃO</span><h2 id="mq16Title">Escolha seu companheiro</h2><p class="mq16-shop-intro">Cada mascote tem arte própria. Acerte questões no Desafio Diário para ganhar cristais.</p><div class="mq16-shop-balance">Seu saldo: <b id="mq16ShopBalance">0</b> 💎</div><div class="mq16-grid" id="mq16Grid"></div><p class="mq16-note" id="mq16Note" aria-live="polite"></p></section></div>'}
 function render(){
@@ -42,7 +44,7 @@ document.getElementById("mq16Close").addEventListener("click",close);
 overlay.addEventListener("click",function(e){if(e.target===overlay)close()});
 render();
 }
-window.MQ16RewardCrystal=function(amount){data=read();data.crystals+=amount||1;save();render();var b=document.getElementById("mq16Balance");if(b){b.classList.remove("mq16-pop");requestAnimationFrame(function(){b.classList.add("mq16-pop")})}};
+window.MQ16RewardCrystal=function(amount){data=read();data.crystals+=amount||1;data.importedDay=today();save();render();var b=document.getElementById("mq16Balance");if(b){b.classList.remove("mq16-pop");requestAnimationFrame(function(){b.classList.add("mq16-pop")})}};
 function boot(){mount();var observer=new MutationObserver(function(){if(!document.getElementById("mq16Hub"))mount()});observer.observe(document.body,{childList:true,subtree:true})}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
