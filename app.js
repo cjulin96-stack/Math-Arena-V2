@@ -42,7 +42,57 @@ function switchView(view){$$(".view").forEach(v=>v.classList.toggle("active",v.i
 function startUnit(i){if(i>0&&!units[i-1].ids.every(id=>state.done.includes(id))){toast("Conclua a unidade anterior primeiro.");return}const u=units[i];session={questions:u.ids.map(id=>window.MATHQUEST_QUESTIONS.find(q=>q.id===id)),index:0,hearts:5,selected:null,answered:false,lessonUnit:i,correct:0,practice:false};openLesson()}
 function startPractice(topic){let qs=window.MATHQUEST_QUESTIONS.filter(q=>q.topic===topic);if(!qs.length)return;session={questions:shuffle(qs).slice(0,Math.min(5,qs.length)),index:0,hearts:5,selected:null,answered:false,lessonUnit:null,correct:0,practice:true};openLesson()}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function openLesson(){$("#lessonModal").classList.remove("hidden");renderQuestion()}
+function openLesson(){
+  $("#lessonModal").classList.remove("hidden");
+  $("#lessonProgress").style.width="0%";
+  $("#heartsCount").textContent=session.hearts;
+  const unit=session.lessonUnit!==null?units[session.lessonUnit]:null;
+  const topic=unit?unit.topic:"Treino livre";
+  const title=unit?unit.title:"Prática livre";
+  const count=session.questions.length;
+  const xp=count*10;
+  $("#lessonContent").innerHTML=`
+    <section class="mq-intro">
+      <div class="mq-intro-kicker"><span class="mq-kicker-dot"></span> NOVA MISSÃO DISPONÍVEL</div>
+      <div class="mq-mascot-stage">
+        <div class="mq-mascot-aura"></div>
+        <div class="mq-orbit"><span>＋</span><span>÷</span></div>
+        <div class="mq-orbit mq-orbit-two"><span>π</span><span>×</span></div>
+        <svg class="mq-mascot" viewBox="0 0 180 180" role="img" aria-label="Nexo, mascote do MathQuest">
+          <defs><linearGradient id="nexoBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9a2ff"/><stop offset="1" stop-color="#6845d5"/></linearGradient><linearGradient id="nexoFace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eee8ff"/></linearGradient></defs>
+          <path d="M90 10 151 45 151 119 90 158 29 119 29 45Z" fill="url(#nexoBody)" stroke="#5637b7" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M90 10 90 158 29 119 29 45Z" fill="#fff" opacity=".13"/>
+          <path d="M49 57 Q90 39 131 57 L125 105 Q90 132 55 105Z" fill="url(#nexoFace)" stroke="#5637b7" stroke-width="3"/>
+          <ellipse cx="73" cy="79" rx="6" ry="9" fill="#302451"/><ellipse cx="107" cy="79" rx="6" ry="9" fill="#302451"/>
+          <path d="M77 96 Q90 107 103 96" fill="none" stroke="#7956d7" stroke-width="4" stroke-linecap="round"/>
+          <path d="M90 3V15 M20 45 31 51 M160 45 149 51" stroke="#8b6be5" stroke-width="5" stroke-linecap="round"/>
+          <path d="M44 125 33 140 M136 125 147 140" stroke="#5637b7" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="90" cy="145" r="5" fill="#e8ddff"/>
+        </svg>
+        <div class="mq-mascot-name">NEXO <span>• GUIA DA JORNADA</span></div>
+      </div>
+      <div class="mq-mission-card">
+        <div class="mq-topic-label">TEMA DA MISSÃO</div>
+        <div class="mq-topic">${topic}</div>
+        <h2>${title}</h2>
+        <p>Prepare-se! Nexo vai acompanhar você nesta jornada de aprendizagem.</p>
+        <div class="mq-mission-stats">
+          <div><strong>${count}</strong><span>QUESTÕES</span></div>
+          <div><strong>${xp}</strong><span>XP MÁXIMO</span></div>
+          <div><strong>♥ ${session.hearts}</strong><span>VIDAS</span></div>
+        </div>
+        <button class="mq-start-btn" id="mqStartJourney">INICIAR JORNADA <span>➜</span></button>
+        <div class="mq-mission-foot">Cada resposta correta vale 10 XP. Boa jornada!</div>
+      </div>
+    </section>`;
+  $("#mqStartJourney").addEventListener("click",()=>{
+    const btn=$("#mqStartJourney");
+    btn.disabled=true;
+    btn.innerHTML="PREPARANDO MISSÃO…";
+    $(".mq-intro").classList.add("mq-launching");
+    setTimeout(()=>{renderQuestion()},260);
+  });
+}
 function closeLesson(){if(session.answered||session.index===0){$("#lessonModal").classList.add("hidden");return}if(confirm("Sair agora? Seu progresso desta rodada não será contado."))$("#lessonModal").classList.add("hidden")}
 function renderQuestion(){const q=session.questions[session.index];if(!q){finishLesson();return}session.selected=null;session.answered=false;$("#lessonProgress").style.width=(session.index/session.questions.length*100)+"%";$("#heartsCount").textContent=session.hearts;$("#lessonContent").innerHTML=`<div class="lesson-kicker">${session.practice?"PRÁTICA LIVRE":`UNIDADE ${session.lessonUnit+1}`} · QUESTÃO ${session.index+1} DE ${session.questions.length}</div><h2>${q.title}</h2><p class="lesson-prompt">${q.prompt}</p><div class="question-box">${q.expression}</div><div class="answer-options">${q.options.map((o,i)=>`<button class="answer-option" data-answer="${escapeHTML(o)}">${String.fromCharCode(65+i)}. &nbsp;${escapeHTML(o)}</button>`).join("")}</div><div class="lesson-bottom"><div class="feedback" id="feedback">Escolha uma alternativa para continuar.</div><button class="btn btn-primary" id="checkAnswer" disabled>Conferir</button></div>`;$$("[data-answer]").forEach(b=>b.addEventListener("click",()=>{if(session.answered)return;session.selected=b.dataset.answer;$$("[data-answer]").forEach(x=>x.classList.toggle("selected",x===b));$("#checkAnswer").disabled=false}));$("#checkAnswer").addEventListener("click",()=>session.answered?nextQuestion():checkAnswer())}
 function checkAnswer(){const q=session.questions[session.index],correct=session.selected===q.answer;session.answered=true;const fb=$("#feedback");if(correct){session.correct++;state.correct++;state.combo++;state.bestCombo=Math.max(state.bestCombo,state.combo);state.xp+=10;state.gems+=2;state.dailyXP[today()]=(state.dailyXP[today()]||0)+10;registerDay();if(!session.practice&&!state.done.includes(q.id))state.done.push(q.id);fb.textContent="Muito bem! "+q.explain;fb.className="feedback good";confetti();}else{state.wrong++;state.combo=0;session.hearts--;fb.textContent="Quase! "+q.explain;fb.className="feedback bad"}$$("[data-answer]").forEach(b=>{b.disabled=true;if(b.dataset.answer===q.answer)b.classList.add("correct");else if(b.dataset.answer===session.selected)b.classList.add("wrong")});$("#heartsCount").textContent=session.hearts;$("#checkAnswer").textContent="Continuar";checkAchievements();save();if(session.hearts<=0)$("#checkAnswer").textContent="Ver resultado"}
