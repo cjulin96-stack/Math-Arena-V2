@@ -11,3 +11,7 @@ body.mq18-lesson-active #mq17Companion{display:none!important}
 @keyframes mq18-enter{from{opacity:0;transform:translateY(13px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes mq18-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}@keyframes mq18-pulse{0%,100%{transform:scale(.92);opacity:.7}50%{transform:scale(1.08);opacity:1}}
 @media(max-width:480px){.mq18-intro{padding:15px 12px 18px}.mq18-mascot-stage{min-height:180px}.mq18-mascot{width:126px;height:136px}.mq18-mascot svg{width:124px;height:134px}.mq18-mascot-emoji{font-size:88px}.mq18-intro h2{font-size:23px}}
 @media(prefers-reduced-motion:reduce){.mq18-intro,.mq18-aura,.mq18-mascot{animation:none!important}}
+
+/* Ajuste do espaço superior da tela de ranking global */
+.view[id*="rank"] > .section-heading{margin-top:0!important}
+.view[id*="rank"] .ranking-panel{margin-top:0!important}
