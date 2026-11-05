@@ -70,11 +70,11 @@
     document.getElementById("mq15Next").addEventListener("click", next);
     renderDailyStatus();
   }
-  let order=[], step=0, points=0, locked=false;
+  let order=[], step=0, points=0, locked=false, completed=false;
   function begin() {
     const d=read(), day=today();
     order = questions.map((_,i)=>i).sort((a,b)=>((a*17+Number(day.replaceAll("-","")))%31)-((b*17+Number(day.replaceAll("-","")))%31)).slice(0,3);
-    step=0; points=0; locked=false;
+    step=0; points=0; locked=false; completed=false;
     if(d.day===day && d.completed){ showComplete(d.points||0,true); return; }
     renderQuestion();
   }
@@ -101,18 +101,20 @@
     next.textContent=step===2?"FINALIZAR":"PRÓXIMA QUESTÃO";
   }
   function next() {
+    if(completed){document.getElementById("mq15Overlay").classList.remove("is-open");return;}
     if(!locked)return;
     if(step<2){step++;locked=false;renderQuestion();return;}
     const d=read(); const result={day:today(),completed:true,points};
     save(result); showComplete(points,false); renderDailyStatus();
   }
   function showComplete(value,already) {
+    completed=true;
     document.getElementById("mq15Progress").style.width="100%";
     document.getElementById("mq15Counter").textContent="MISSÃO CONCLUÍDA";
     document.getElementById("mq15Question").textContent=already?"Você já concluiu o desafio de hoje!":"Você concluiu o desafio diário!";
     document.getElementById("mq15Options").innerHTML="";
     document.getElementById("mq15Feedback").textContent=`Pontuação: ${value} de 30 XP. Volte amanhã para uma nova missão.`;
-    const next=document.getElementById("mq15Next");next.disabled=false;next.textContent="FECHAR";next.onclick=()=>document.getElementById("mq15Overlay").classList.remove("is-open");
+    const nextButton=document.getElementById("mq15Next");nextButton.disabled=false;nextButton.textContent="FECHAR";
   }
   function renderDailyStatus() {
     const d=read(), todayDone=d.day===today()&&d.completed;
