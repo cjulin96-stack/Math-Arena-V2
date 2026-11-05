@@ -1,5 +1,5 @@
-const CACHE="mathquest-18-build3";
-const ASSETS=["./mq15-upgrade.js?v=18.1.0","./mq15-upgrade.css?v=18.1.0","./mq16-mascots.js?v=18.1.0","./mq16-mascots.css?v=18.1.0","./mq17-companions.js?v=18.1.0","./mq17-companions.css?v=18.1.0","./mq18-upgrade.js?v=18.1.0","./mq18-upgrade.css?v=18.1.0"];
+const CACHE="mathquest-18-build4";
+const ASSETS=["./mq15-upgrade.js?v=18.1.1","./mq15-upgrade.css?v=18.1.1","./mq16-mascots.js?v=18.1.1","./mq16-mascots.css?v=18.1.1","./mq17-companions.js?v=18.1.1","./mq17-companions.css?v=18.1.1","./mq18-upgrade.js?v=18.1.1","./mq18-upgrade.css?v=18.1.1"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
@@ -24,7 +24,7 @@ async function upgradedPage(request){
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq15-upgrade\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
   html=html.replace(/<link\b[^>]*href=["'][^"']*mq16-mascots\.css[^"']*["'][^>]*>/gi,"");
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq16-mascots\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
-  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=18.1.0"><link rel="stylesheet" href="./mq16-mascots.css?v=18.1.0"><link rel="stylesheet" href="./mq17-companions.css?v=18.1.0"><link rel="stylesheet" href="./mq18-upgrade.css?v=18.1.0"><script defer src="./mq15-upgrade.js?v=18.1.0"></script><script defer src="./mq16-mascots.js?v=18.1.0"></script><script defer src="./mq17-companions.js?v=18.1.0"></script><script defer src="./mq18-upgrade.js?v=18.1.0"></script></body>');
+  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=18.1.1"><link rel="stylesheet" href="./mq16-mascots.css?v=18.1.1"><link rel="stylesheet" href="./mq17-companions.css?v=18.1.1"><link rel="stylesheet" href="./mq18-upgrade.css?v=18.1.1"><script defer src="./mq15-upgrade.js?v=18.1.1"></script><script defer src="./mq16-mascots.js?v=18.1.1"></script><script defer src="./mq17-companions.js?v=18.1.1"></script><script defer src="./mq18-upgrade.js?v=18.1.1"></script></body>');
   const headers=new Headers(network.headers);
   ["content-length","content-encoding","content-md5","etag","last-modified"].forEach(name=>headers.delete(name));
   headers.set("cache-control","no-store");
