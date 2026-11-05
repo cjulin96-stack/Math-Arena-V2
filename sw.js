@@ -4,7 +4,9 @@ self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
 self.addEventListener("activate",event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())
+    .then(()=>self.clients.matchAll({type:'window',includeUncontrolled:true}))
+    .then(clients=>Promise.all(clients.map(client=>client.navigate(client.url).catch(()=>null)))));
 });
 async function upgradedPage(request){
   const network=await fetch(request,{cache:"no-store"});
