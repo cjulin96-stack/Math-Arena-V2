@@ -1,4 +1,4 @@
-const CACHE="mathquest-15-build1";
+const CACHE="mathquest-15-build2";
 const ASSETS=["./mq15-upgrade.js","./mq15-upgrade.css"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
