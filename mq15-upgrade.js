@@ -96,7 +96,7 @@
     const q=questions[order[step]], good=i===q.ok;
     document.querySelectorAll(".mq15-option").forEach((el,n)=>{el.disabled=true;if(n===q.ok)el.classList.add("is-correct");else if(n===i)el.classList.add("is-wrong");});
     if(good){points+=10;if(typeof window.MQ16RewardCrystal==='function')window.MQ16RewardCrystal(1);}
-    document.getElementById("mq15Feedback").textContent=(good?"Muito bem! +10 pontos. ":"Vamos aprender: ")+q.why;
+    document.getElementById("mq15Feedback").textContent=(good?"Muito bem! +10 pontos e +1 cristal. ":"Vamos aprender: ")+q.why;
     const next=document.getElementById("mq15Next"); next.disabled=false;
     next.textContent=step===2?"FINALIZAR":"PRÓXIMA QUESTÃO";
   }
