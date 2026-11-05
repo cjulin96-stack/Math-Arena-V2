@@ -1,5 +1,5 @@
-const CACHE="mathquest-17-build3";
-const ASSETS=["./mq15-upgrade.js?v=17.0.3","./mq15-upgrade.css?v=17.0.3","./mq16-mascots.js?v=17.0.3","./mq16-mascots.css?v=17.0.3","./mq17-companions.js?v=17.0.3","./mq17-companions.css?v=17.0.3"];
+const CACHE="mathquest-17-build4";
+const ASSETS=["./mq15-upgrade.js?v=17.0.4","./mq15-upgrade.css?v=17.0.4","./mq16-mascots.js?v=17.0.4","./mq16-mascots.css?v=17.0.4","./mq17-companions.js?v=17.0.4","./mq17-companions.css?v=17.0.4"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
@@ -24,7 +24,7 @@ async function upgradedPage(request){
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq15-upgrade\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
   html=html.replace(/<link\b[^>]*href=["'][^"']*mq16-mascots\.css[^"']*["'][^>]*>/gi,"");
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq16-mascots\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
-  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=17.0.3"><link rel="stylesheet" href="./mq16-mascots.css?v=17.0.3"><link rel="stylesheet" href="./mq17-companions.css?v=17.0.3"><script defer src="./mq15-upgrade.js?v=17.0.3"></script><script defer src="./mq16-mascots.js?v=17.0.3"></script><script defer src="./mq17-companions.js?v=17.0.3"></script></body>');
+  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=17.0.4"><link rel="stylesheet" href="./mq16-mascots.css?v=17.0.4"><link rel="stylesheet" href="./mq17-companions.css?v=17.0.4"><script defer src="./mq15-upgrade.js?v=17.0.4"></script><script defer src="./mq16-mascots.js?v=17.0.4"></script><script defer src="./mq17-companions.js?v=17.0.4"></script></body>');
   const headers=new Headers(network.headers);
   ["content-length","content-encoding","content-md5","etag","last-modified"].forEach(name=>headers.delete(name));
   headers.set("cache-control","no-store");
