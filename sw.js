@@ -20,8 +20,8 @@ async function upgradedPage(request){
   }
   html=html.replaceAll("MATHQUEST 14.0","MATHQUEST 15.0").replaceAll("MathQuest 14.0","MathQuest 15.0").replaceAll("MathQuest 11.0","MathQuest 15.0");
   /* Remove any older injected references, then add the current build exactly once. */
-  html=html.replace(/<link\\b[^>]*href=["'][^"']*mq15-upgrade\\.css[^"']*["'][^>]*>/gi,"");
-  html=html.replace(/<script\\b[^>]*src=["'][^"']*mq15-upgrade\\.js[^"']*["'][^>]*>\\s*<\\/script>/gi,"");
+  html=html.replace(/<link\b[^>]*href=["'][^"']*mq15-upgrade\.css[^"']*["'][^>]*>/gi,"");
+  html=html.replace(/<script\b[^>]*src=["'][^"']*mq15-upgrade\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
   html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=15.0.5"><script defer src="./mq15-upgrade.js?v=15.0.5"></script></body>');
   const headers=new Headers(network.headers);
   ["content-length","content-encoding","content-md5","etag","last-modified"].forEach(name=>headers.delete(name));
