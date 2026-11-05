@@ -1,5 +1,5 @@
-const CACHE="mathquest-15-build4";
-const ASSETS=["./mq15-upgrade.js?v=15.0.4","./mq15-upgrade.css?v=15.0.4"];
+const CACHE="mathquest-15-build5";
+const ASSETS=["./mq15-upgrade.js?v=15.0.5","./mq15-upgrade.css?v=15.0.5"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
@@ -19,9 +19,10 @@ async function upgradedPage(request){
     html=html.replace(bridgeAnchor,"updateUltimatePanel();\nObject.defineProperties(window,{\n  S:{configurable:true,get:()=>S,set:value=>{S=value}},\n  session:{configurable:true,get:()=>session,set:value=>{session=value}},\n  $:{configurable:true,get:()=>$},\n  save:{configurable:true,get:()=>save},\n  toast:{configurable:true,get:()=>toast},\n  render:{configurable:true,get:()=>render},\n  renderWorlds:{configurable:true,get:()=>renderWorlds},\n  renderShop:{configurable:true,get:()=>renderShop,set:value=>{renderShop=value}},\n  start:{configurable:true,get:()=>start,set:value=>{start=value}},\n  question:{configurable:true,get:()=>question,set:value=>{question=value}},\n  check:{configurable:true,get:()=>check,set:value=>{check=value}},\n  finish:{configurable:true,get:()=>finish,set:value=>{finish=value}},\n  showView:{configurable:true,get:()=>showView,set:value=>{showView=value}}\n});\n})();\n\n\n/* ===== MATHQUEST 14.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */");
   }
   html=html.replaceAll("MATHQUEST 14.0","MATHQUEST 15.0").replaceAll("MathQuest 14.0","MathQuest 15.0").replaceAll("MathQuest 11.0","MathQuest 15.0");
-  if(!html.includes("mq15-upgrade.js")){
-    html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=15.0"><script defer src="./mq15-upgrade.js?v=15.0"></script></body>');
-  }
+  /* Remove any older injected references, then add the current build exactly once. */
+  html=html.replace(/<link\\b[^>]*href=["'][^"']*mq15-upgrade\\.css[^"']*["'][^>]*>/gi,"");
+  html=html.replace(/<script\\b[^>]*src=["'][^"']*mq15-upgrade\\.js[^"']*["'][^>]*>\\s*<\\/script>/gi,"");
+  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=15.0.5"><script defer src="./mq15-upgrade.js?v=15.0.5"></script></body>');
   const headers=new Headers(network.headers);
   ["content-length","content-encoding","content-md5","etag","last-modified"].forEach(name=>headers.delete(name));
   headers.set("cache-control","no-store");
