@@ -88,7 +88,8 @@ function successSound(){
  }catch(_){}
 }
 function observeCelebration(){
- const panel=el("mq17Companion");if(!panel)return;
+ const panel=el("mq17Companion");if(!panel||panel.dataset.mq18Observed==="1")return;
+ panel.dataset.mq18Observed="1";
  let played=false;
  const observer=new MutationObserver(()=>{
   if(panel.classList.contains("is-good")&&!played){
