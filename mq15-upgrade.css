@@ -37,3 +37,6 @@
 @keyframes mq15Fade{from{opacity:0}to{opacity:1}}
 @media(max-width:600px){.mq15-daily-launch{gap:10px;padding:13px}.mq15-daily-launch b{font-size:12px}.mq15-daily-launch small{font-size:10px}.mq15-daily-launch button{padding:10px}.mq15-dialog{padding:23px 19px}}
 @media(prefers-reduced-motion:reduce){.mq15-active .mq14-launch .mq14-mascot,.mq15-question-enter,.mq15-answer-enter,.mq15-tap{animation:none!important}}
+
+/* Daily challenge: category tag and subject clarity */
+.mq15-topic{display:inline-flex;align-items:center;margin:0 0 10px;padding:6px 10px;border:1px solid #a99aff66;border-radius:999px;background:#8d79ff20;color:#c9bdff;font-size:9px;font-weight:950;letter-spacing:1.2px}
