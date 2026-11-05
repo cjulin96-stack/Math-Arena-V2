@@ -1,10 +1,10 @@
 {
-  "name": "MathQuest 14.1 — Portal Corrigido",
+  "name": "MathQuest 15.0 — Empire Universe Complete",
   "short_name": "MathQuest",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#080d1c",
   "theme_color": "#080d1c",
   "lang": "pt-BR",
-  "description": "MathQuest 14.1: plataforma de aprendizagem, trilhas, missões, mascotes e desafios de matemática."
+  "description": "MathQuest 15.0: trilhas, mascotes originais, missões, evolução e desafios de matemática."
 }
