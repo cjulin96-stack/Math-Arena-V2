@@ -63,7 +63,7 @@ function openLesson(){
           <path d="M90 10 151 45 151 119 90 158 29 119 29 45Z" fill="url(#nexoBody)" stroke="#5637b7" stroke-width="4" stroke-linejoin="round"/>
           <path d="M90 10 90 158 29 119 29 45Z" fill="#fff" opacity=".13"/>
           <path d="M49 57 Q90 39 131 57 L125 105 Q90 132 55 105Z" fill="url(#nexoFace)" stroke="#5637b7" stroke-width="3"/>
-          <ellipse cx="73" cy="79" rx="6" ry="9" fill="#302451"/><ellipse cx="107" cy="79" rx="6" ry="9" fill="#302451"/>
+          <ellipse class="nexo-eye" cx="73" cy="79" rx="6" ry="9" fill="#302451"/><ellipse class="nexo-eye" cx="107" cy="79" rx="6" ry="9" fill="#302451"/>
           <path d="M77 96 Q90 107 103 96" fill="none" stroke="#7956d7" stroke-width="4" stroke-linecap="round"/>
           <path d="M90 3V15 M20 45 31 51 M160 45 149 51" stroke="#8b6be5" stroke-width="5" stroke-linecap="round"/>
           <path d="M44 125 33 140 M136 125 147 140" stroke="#5637b7" stroke-width="7" stroke-linecap="round"/>
