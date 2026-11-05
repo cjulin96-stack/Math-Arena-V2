@@ -3,12 +3,367 @@
   "use strict";
   const KEY = "mq15_daily_challenge_v1";
   const questions = [
-    {q:"Quanto é 15 × 6?",a:["80","90","96"],ok:1,why:"15 × 6 = 90."},
-    {q:"Qual é 25% de 80?",a:["15","20","25"],ok:1,why:"25% é a quarta parte: 80 ÷ 4 = 20."},
-    {q:"Resolva: 3x = 27",a:["6","8","9"],ok:2,why:"27 ÷ 3 = 9."},
-    {q:"Qual é a área de um quadrado de lado 7?",a:["14","28","49"],ok:2,why:"Área = lado × lado = 7 × 7 = 49."},
-    {q:"Quanto é 2/5 + 1/5?",a:["3/5","3/10","2/10"],ok:0,why:"Com denominadores iguais, somamos 2 + 1 e mantemos o 5."}
-  ];
+  {
+    "id": "fa1",
+    "topic": "Função afim",
+    "q": "Na função f(x) = 2x + 3, quanto vale f(4)?",
+    "a": [
+      "9",
+      "11",
+      "14"
+    ],
+    "ok": 1,
+    "why": "Substituímos x por 4: 2 × 4 + 3 = 11."
+  },
+  {
+    "id": "fa2",
+    "topic": "Função afim",
+    "q": "Qual é o coeficiente angular de f(x) = -3x + 5?",
+    "a": [
+      "5",
+      "-3",
+      "3"
+    ],
+    "ok": 1,
+    "why": "O coeficiente angular é o número que acompanha x: -3."
+  },
+  {
+    "id": "fa3",
+    "topic": "Função afim",
+    "q": "Uma função é f(x) = x + 7. Qual é sua raiz?",
+    "a": [
+      "-7",
+      "7",
+      "0"
+    ],
+    "ok": 0,
+    "why": "Fazemos x + 7 = 0, então x = -7."
+  },
+  {
+    "id": "fa4",
+    "topic": "Função afim",
+    "q": "Se f(x) = 4x - 2, qual é f(2)?",
+    "a": [
+      "4",
+      "6",
+      "8"
+    ],
+    "ok": 1,
+    "why": "4 × 2 - 2 = 6."
+  },
+  {
+    "id": "geo1",
+    "topic": "Geometria",
+    "q": "Um retângulo mede 8 cm por 5 cm. Qual é sua área?",
+    "a": [
+      "13 cm²",
+      "26 cm²",
+      "40 cm²"
+    ],
+    "ok": 2,
+    "why": "Área do retângulo = base × altura = 8 × 5 = 40 cm²."
+  },
+  {
+    "id": "geo2",
+    "topic": "Geometria",
+    "q": "Qual é a soma dos ângulos internos de um triângulo?",
+    "a": [
+      "90°",
+      "180°",
+      "360°"
+    ],
+    "ok": 1,
+    "why": "A soma dos ângulos internos de qualquer triângulo é 180°."
+  },
+  {
+    "id": "geo3",
+    "topic": "Geometria",
+    "q": "Um quadrado tem lado de 6 cm. Qual é seu perímetro?",
+    "a": [
+      "12 cm",
+      "24 cm",
+      "36 cm"
+    ],
+    "ok": 1,
+    "why": "O perímetro é 4 × 6 = 24 cm."
+  },
+  {
+    "id": "geo4",
+    "topic": "Geometria",
+    "q": "Qual é o nome do polígono que possui 5 lados?",
+    "a": [
+      "Pentágono",
+      "Hexágono",
+      "Heptágono"
+    ],
+    "ok": 0,
+    "why": "Um polígono de cinco lados é um pentágono."
+  },
+  {
+    "id": "frac1",
+    "topic": "Frações",
+    "q": "Quanto é 3/4 de 20?",
+    "a": [
+      "5",
+      "15",
+      "16"
+    ],
+    "ok": 1,
+    "why": "20 ÷ 4 = 5; depois 5 × 3 = 15."
+  },
+  {
+    "id": "frac2",
+    "topic": "Frações",
+    "q": "Qual fração é equivalente a 2/3?",
+    "a": [
+      "4/6",
+      "3/5",
+      "2/6"
+    ],
+    "ok": 0,
+    "why": "Multiplicando numerador e denominador por 2, obtemos 4/6."
+  },
+  {
+    "id": "frac3",
+    "topic": "Frações",
+    "q": "Quanto é 1/2 + 1/4?",
+    "a": [
+      "2/6",
+      "3/4",
+      "1/8"
+    ],
+    "ok": 1,
+    "why": "1/2 equivale a 2/4; então 2/4 + 1/4 = 3/4."
+  },
+  {
+    "id": "frac4",
+    "topic": "Frações",
+    "q": "Em 5/8, qual número é o denominador?",
+    "a": [
+      "5",
+      "8",
+      "13"
+    ],
+    "ok": 1,
+    "why": "O denominador é o número de baixo: 8."
+  },
+  {
+    "id": "por1",
+    "topic": "Porcentagem",
+    "q": "Quanto é 15% de 200?",
+    "a": [
+      "15",
+      "30",
+      "45"
+    ],
+    "ok": 1,
+    "why": "10% de 200 é 20 e 5% é 10; total: 30."
+  },
+  {
+    "id": "por2",
+    "topic": "Porcentagem",
+    "q": "Um produto de R$ 80 teve desconto de 25%. Qual o novo preço?",
+    "a": [
+      "R$ 60",
+      "R$ 65",
+      "R$ 55"
+    ],
+    "ok": 0,
+    "why": "25% de 80 é 20; 80 - 20 = 60."
+  },
+  {
+    "id": "por3",
+    "topic": "Porcentagem",
+    "q": "Uma turma tem 40 alunos e 50% são meninas. Quantas meninas há?",
+    "a": [
+      "10",
+      "20",
+      "30"
+    ],
+    "ok": 1,
+    "why": "50% é a metade: 40 ÷ 2 = 20."
+  },
+  {
+    "id": "alg1",
+    "topic": "Equações",
+    "q": "Resolva: 3x + 4 = 19.",
+    "a": [
+      "x = 4",
+      "x = 5",
+      "x = 6"
+    ],
+    "ok": 1,
+    "why": "3x = 15; dividindo por 3, x = 5."
+  },
+  {
+    "id": "alg2",
+    "topic": "Equações",
+    "q": "Qual valor de x resolve 2x - 8 = 10?",
+    "a": [
+      "7",
+      "8",
+      "9"
+    ],
+    "ok": 2,
+    "why": "2x = 18; portanto x = 9."
+  },
+  {
+    "id": "alg3",
+    "topic": "Equações",
+    "q": "Se x/5 = 4, quanto vale x?",
+    "a": [
+      "9",
+      "20",
+      "25"
+    ],
+    "ok": 1,
+    "why": "Multiplicamos os dois lados por 5: x = 20."
+  },
+  {
+    "id": "pot1",
+    "topic": "Potenciação",
+    "q": "Quanto vale 2⁵?",
+    "a": [
+      "10",
+      "16",
+      "32"
+    ],
+    "ok": 2,
+    "why": "2⁵ = 2 × 2 × 2 × 2 × 2 = 32."
+  },
+  {
+    "id": "pot2",
+    "topic": "Potenciação",
+    "q": "Qual é o resultado de 10³?",
+    "a": [
+      "100",
+      "1.000",
+      "10.000"
+    ],
+    "ok": 1,
+    "why": "10³ = 10 × 10 × 10 = 1.000."
+  },
+  {
+    "id": "pot3",
+    "topic": "Potenciação",
+    "q": "Quanto é 3² + 2²?",
+    "a": [
+      "11",
+      "13",
+      "25"
+    ],
+    "ok": 1,
+    "why": "3² = 9 e 2² = 4; 9 + 4 = 13."
+  },
+  {
+    "id": "est1",
+    "topic": "Estatística",
+    "q": "Qual é a média de 4, 6 e 8?",
+    "a": [
+      "6",
+      "7",
+      "8"
+    ],
+    "ok": 0,
+    "why": "(4 + 6 + 8) ÷ 3 = 6."
+  },
+  {
+    "id": "est2",
+    "topic": "Estatística",
+    "q": "Na sequência 2, 3, 3, 5, 8, qual é a moda?",
+    "a": [
+      "2",
+      "3",
+      "5"
+    ],
+    "ok": 1,
+    "why": "Moda é o valor que mais aparece: 3."
+  },
+  {
+    "id": "est3",
+    "topic": "Estatística",
+    "q": "Qual é a mediana de 1, 4, 7, 9 e 12?",
+    "a": [
+      "4",
+      "7",
+      "9"
+    ],
+    "ok": 1,
+    "why": "O valor central da lista ordenada é 7."
+  },
+  {
+    "id": "prob1",
+    "topic": "Probabilidade",
+    "q": "Ao lançar um dado comum, qual a chance de sair 6?",
+    "a": [
+      "1/2",
+      "1/6",
+      "1/3"
+    ],
+    "ok": 1,
+    "why": "Há 1 resultado favorável entre 6 resultados possíveis."
+  },
+  {
+    "id": "prob2",
+    "topic": "Probabilidade",
+    "q": "Uma moeda é lançada. Qual a chance de sair cara?",
+    "a": [
+      "25%",
+      "50%",
+      "75%"
+    ],
+    "ok": 1,
+    "why": "Cara é um dos dois resultados igualmente possíveis: 1/2 = 50%."
+  },
+  {
+    "id": "raz1",
+    "topic": "Razão e proporção",
+    "q": "A razão entre 8 e 4, nessa ordem, é:",
+    "a": [
+      "2",
+      "4",
+      "12"
+    ],
+    "ok": 0,
+    "why": "8 ÷ 4 = 2."
+  },
+  {
+    "id": "raz2",
+    "topic": "Razão e proporção",
+    "q": "Se 2 cadernos custam R$ 10, quanto custam 6 cadernos iguais?",
+    "a": [
+      "R$ 20",
+      "R$ 25",
+      "R$ 30"
+    ],
+    "ok": 2,
+    "why": "Cada caderno custa R$ 5; 6 custam R$ 30."
+  },
+  {
+    "id": "un1",
+    "topic": "Medidas",
+    "q": "Quantos centímetros há em 2,5 metros?",
+    "a": [
+      "25 cm",
+      "250 cm",
+      "2.500 cm"
+    ],
+    "ok": 1,
+    "why": "1 metro tem 100 cm; 2,5 × 100 = 250 cm."
+  },
+  {
+    "id": "un2",
+    "topic": "Medidas",
+    "q": "Quantos minutos há em 2 horas e meia?",
+    "a": [
+      "120",
+      "150",
+      "180"
+    ],
+    "ok": 1,
+    "why": "2 horas = 120 minutos; mais 30 = 150."
+  }
+];
   const today = () => new Date().toLocaleDateString("en-CA");
   const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
   const save = value => localStorage.setItem(KEY, JSON.stringify(value));
@@ -53,7 +408,7 @@
   }
   function challengeMarkup() {
     return `<div class="mq15-daily-launch" id="mq15DailyLaunch"><span class="mq15-daily-icon">⚡</span><span><b>Desafio diário</b><small>Uma missão nova de matemática</small></span><button type="button" id="mq15DailyOpen">JOGAR</button></div>
-    <div class="mq15-overlay" id="mq15Overlay" aria-hidden="true"><section class="mq15-dialog" role="dialog" aria-modal="true" aria-labelledby="mq15Title"><button class="mq15-close" id="mq15Close" aria-label="Fechar">×</button><div class="mq15-dialog-kicker">MATHQUEST 17.0 · MISSÃO EXTRA</div><h2 id="mq15Title">Desafio diário</h2><div class="mq15-progress"><i id="mq15Progress"></i></div><p class="mq15-counter" id="mq15Counter">Questão 1 de 3</p><h3 id="mq15Question"></h3><div class="mq15-options" id="mq15Options"></div><p class="mq15-feedback" id="mq15Feedback" aria-live="polite"></p><button class="mq15-next" id="mq15Next" disabled>CONTINUAR</button></section></div>`;
+    <div class="mq15-overlay" id="mq15Overlay" aria-hidden="true"><section class="mq15-dialog" role="dialog" aria-modal="true" aria-labelledby="mq15Title"><button class="mq15-close" id="mq15Close" aria-label="Fechar">×</button><div class="mq15-dialog-kicker">MATHQUEST 17.0 · MISSÃO EXTRA</div><h2 id="mq15Title">Desafio diário</h2><div class="mq15-progress"><i id="mq15Progress"></i></div><p class="mq15-counter" id="mq15Counter">Questão 1 de 3</p><p class="mq15-topic" id="mq15Topic"></p><h3 id="mq15Question"></h3><div class="mq15-options" id="mq15Options"></div><p class="mq15-feedback" id="mq15Feedback" aria-live="polite"></p><button class="mq15-next" id="mq15Next" disabled>CONTINUAR</button></section></div>`;
   }
   function mountChallenge() {
     if (document.getElementById("mq15DailyLaunch")) return;
@@ -70,10 +425,24 @@
     document.getElementById("mq15Next").addEventListener("click", next);
     renderDailyStatus();
   }
-  let order=[], step=0, points=0, locked=false, completed=false;
+  let order=[], step=0, points=0, locked=false, completed=false, selectedQuestions=[];
+  function dailySelection(day, data) {
+    const seedText = day.replaceAll("-","");
+    let seed = Number(seedText) || 1;
+    const random = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const recent = (Array.isArray(data.history) ? data.history : []).slice(-6);
+    const used = new Set(recent.flatMap(item => Array.isArray(item.ids) ? item.ids : []));
+    let pool = questions.map((q,i)=>i).filter(i=>!used.has(questions[i].id));
+    if (pool.length < 3) pool = questions.map((q,i)=>i);
+    for (let i=pool.length-1;i>0;i--) { const j=Math.floor(random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+    const picked=[]; const topics=new Set();
+    for (const i of pool) { const topic=questions[i].topic; if (!topics.has(topic)) { picked.push(i); topics.add(topic); } if (picked.length===3) break; }
+    return picked;
+  }
   function begin() {
     const d=read(), day=today();
-    order = questions.map((_,i)=>i).sort((a,b)=>((a*17+Number(day.replaceAll("-","")))%31)-((b*17+Number(day.replaceAll("-","")))%31)).slice(0,3);
+    order = dailySelection(day,d);
+    selectedQuestions = order.map(i=>questions[i]);
     step=0; points=0; locked=false; completed=false;
     if(d.day===day && d.completed){ showComplete(d.points||0,true); return; }
     renderQuestion();
@@ -81,6 +450,7 @@
   function renderQuestion() {
     const q=questions[order[step]];
     document.getElementById("mq15Counter").textContent=`Questão ${step+1} de 3`;
+    document.getElementById("mq15Topic").textContent=q.topic.toUpperCase();
     document.getElementById("mq15Progress").style.width=(step/3*100)+"%";
     document.getElementById("mq15Question").textContent=q.q;
     document.getElementById("mq15Feedback").textContent="";
@@ -104,7 +474,10 @@
     if(completed){document.getElementById("mq15Overlay").classList.remove("is-open");return;}
     if(!locked)return;
     if(step<2){step++;locked=false;renderQuestion();return;}
-    const d=read(); const result={day:today(),completed:true,points};
+    const d=read();
+    const history=(Array.isArray(d.history)?d.history:[]).filter(item=>item.day!==today());
+    history.push({day:today(),ids:selectedQuestions.map(q=>q.id)});
+    const result={day:today(),completed:true,points,history:history.slice(-7)};
     save(result); showComplete(points,false); renderDailyStatus();
   }
   function showComplete(value,already) {
