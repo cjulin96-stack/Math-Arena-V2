@@ -1,0 +1,27 @@
+/* MathQuest 15.0 — movimento e apresentação responsiva */
+.mq14-launch-mascot .mq14-mascot {
+  width: 112px;
+  height: 130px;
+  overflow: visible;
+  filter: drop-shadow(0 8px 14px #0005);
+}
+.mq14-launch-mascot { padding: 2px; }
+.mq14-launch .mq14-mascot { animation: mq15MascotFloat 2.4s ease-in-out infinite; }
+.mq15-question-enter { animation: mq15QuestionIn .38s cubic-bezier(.2,.8,.2,1) both; }
+.mq15-answer-enter { animation: mq15AnswerIn .34s ease both; animation-delay: calc(var(--mq15-order, 0) * 65ms); }
+.answer.mq15-answer-enter { will-change: transform, opacity; }
+@keyframes mq15MascotFloat {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+@keyframes mq15QuestionIn {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes mq15AnswerIn {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mq14-launch .mq14-mascot, .mq15-question-enter, .mq15-answer-enter { animation: none !important; }
+}
