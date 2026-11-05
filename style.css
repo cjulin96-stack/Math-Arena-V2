@@ -40,3 +40,10 @@
 @keyframes mqOrbit{to{transform:rotate(342deg)}}
 @keyframes mqIntroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:520px){.lesson-window{padding:17px 17px 22px}.mq-mascot-stage{height:185px}.mq-mascot{width:155px;height:155px}.mq-mission-card{padding:18px 15px 15px}.mq-mission-card h2{font-size:19px}.mq-mission-stats strong{font-size:17px}}
+
+
+/* MathQuest 15.0 — piscada natural do Nexo */
+.nexo-eye{transform-box:fill-box;transform-origin:center;animation:nexoBlink 5.2s ease-in-out infinite}
+.nexo-eye:nth-of-type(2){animation-delay:.08s}
+@keyframes nexoBlink{0%,43%,47%,100%{transform:scaleY(1)}45%{transform:scaleY(.08)}}
+@media(prefers-reduced-motion:reduce){.nexo-eye{animation:none}}
