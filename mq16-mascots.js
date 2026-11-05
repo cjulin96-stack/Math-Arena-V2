@@ -35,8 +35,13 @@ data.crystals-=m.price;data.unlocked.push(id);data.selected=id;save();render();n
 }
 function mount(){
 if(document.getElementById("mq16Hub"))return;
-var daily=document.getElementById("mq15DailyLaunch");if(!daily)return;
-daily.insertAdjacentHTML("afterend",markup());
+var daily=document.getElementById("mq15DailyLaunch");
+var host=daily&&daily.parentNode;
+if(!host)host=document.querySelector("main")||document.querySelector(".main-content")||document.querySelector(".app-shell")||document.body;
+if(!host)return;
+var html=markup();
+if(daily)daily.insertAdjacentHTML("afterend",html);
+else host.insertAdjacentHTML("afterbegin",html);
 var overlay=document.getElementById("mq16Overlay");
 document.getElementById("mq16Open").addEventListener("click",function(){overlay.classList.add("is-open");overlay.setAttribute("aria-hidden","false");render();note("")});
 var close=function(){overlay.classList.remove("is-open");overlay.setAttribute("aria-hidden","true")};
