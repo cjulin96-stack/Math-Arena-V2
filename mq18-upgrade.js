@@ -4,7 +4,7 @@
 if(window.MQ18UpgradeLoaded)return;
 window.MQ18UpgradeLoaded=true;
 const el=id=>document.getElementById(id);
-const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let lessonRun=0,lessonTimer=0;\nconst esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const shuffle=a=>{const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
 function mascot(){const svg=document.querySelector("#mq16Current .mq16-current-art svg");if(svg)return svg.outerHTML;return '<div class="mq18-mascot-emoji">'+esc(window.S&&window.S.avatar||"🦊")+'</div>'}
 function startTopic(q,isPractice){
@@ -23,12 +23,20 @@ function startTopic(q,isPractice){
  if(el("lessonBar"))el("lessonBar").style.width="0%";
  if(el("heartText")&&state)el("heartText").textContent="❤️".repeat(state.lives)+"🖤".repeat(5-state.lives);
  if(el("feedback"))el("feedback").className="feedback hidden";
- const maxXP=items.length*10;
- body.innerHTML='<section class="mq18-intro"><div class="mq18-kicker"><span></span> NOVA MISSÃO · MATHQUEST 18.0</div><div class="mq18-mascot-stage"><div class="mq18-aura"></div><div class="mq18-orbit mq18-orbit-a">＋　÷　×</div><div class="mq18-orbit mq18-orbit-b">π　x²　%</div><div class="mq18-mascot">'+mascot()+'</div><div class="mq18-mascot-caption">SEU COMPANHEIRO DE JORNADA</div></div><div class="mq18-topic-label">ASSUNTO DESTA LIÇÃO</div><h2>'+esc(topic)+'</h2><p>Nesta missão, todas as questões serão exclusivamente sobre <b>'+esc(topic)+'</b>.</p><div class="mq18-stats"><div><b>'+items.length+'</b><small>QUESTÕES DO TEMA</small></div><div><b>+'+maxXP+'</b><small>XP MÁXIMO</small></div><div><b>♥ '+(state?state.lives:5)+'</b><small>VIDAS</small></div></div><button type="button" class="mq18-start" id="mq18Start">COMEÇAR MISSÃO <span>➜</span></button><div class="mq18-foot">Nenhuma questão de outro assunto será adicionada.</div></section>';
- check.disabled=false;check.textContent="COMEÇAR MISSÃO";
- check.onclick=()=>{document.body.classList.add("mq18-lesson-active");if(typeof window.question==="function")window.question()};
- const startButton=el("mq18Start");if(startButton)startButton.addEventListener("click",()=>check.click());
+
+ const runId=++lessonRun;
  document.body.classList.add("mq18-lesson-active");
+ body.innerHTML='<section class="mq18-loading" role="status" aria-live="polite"><div class="mq18-loading-kicker">MATHQUEST · PREPARANDO SUA MISSÃO</div><div class="mq18-loading-stage"><div class="mq18-loading-aura"></div><div class="mq18-loading-mascot">'+mascot()+'</div><div class="mq18-loading-stars">✦　＋　✧　÷　✦</div></div><h2>Preparando '+esc(topic)+'</h2><p>Seu próximo desafio está quase pronto...</p><div class="mq18-loading-track"><i></i></div></section>';
+ check.disabled=true;
+ check.textContent="CARREGANDO...";
+ clearTimeout(lessonTimer);
+ lessonTimer=setTimeout(()=>{
+   if(runId!==lessonRun)return;
+   body.innerHTML="";
+   check.disabled=false;
+   check.textContent="VERIFICAR";
+   if(typeof window.question==="function")window.question();
+ },1550);
 }
 const oldStart=window.start;
 if(typeof oldStart==="function"&&Array.isArray(window.Q))window.start=startTopic;
@@ -53,6 +61,49 @@ if(typeof oldFinish==="function")window.finish=function(){
  };
  return result;
 };
-const close=el("closeLesson");if(close)close.addEventListener("click",()=>document.body.classList.remove("mq18-lesson-active"));
+document.addEventListener("click",event=>{
+ const closeButton=event.target&&event.target.closest&&event.target.closest("#closeLesson");
+ if(!closeButton)return;
+ event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
+ if(!confirm("Sair agora? O progresso desta rodada não será contado."))return;
+ lessonRun++;clearTimeout(lessonTimer);
+ const modal=el("lessonModal");
+ if(modal){modal.classList.add("hide");modal.style.display="none"}
+ document.body.classList.remove("mq18-lesson-active");
+ if(typeof window.showView==="function")window.showView("learn");
+},true);
+function successSound(){
+ try{
+  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;
+  const ctx=new Ctx();const now=ctx.currentTime;
+  [[659.25,0],[880,0.13]].forEach(([frequency,delay])=>{
+   const osc=ctx.createOscillator(),gain=ctx.createGain();
+   osc.type="sine";osc.frequency.setValueAtTime(frequency,now+delay);
+   gain.gain.setValueAtTime(0.0001,now+delay);
+   gain.gain.exponentialRampToValueAtTime(0.12,now+delay+0.02);
+   gain.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.19);
+   osc.connect(gain);gain.connect(ctx.destination);osc.start(now+delay);osc.stop(now+delay+0.2);
+  });
+  setTimeout(()=>ctx.close().catch(()=>{}),650);
+ }catch(_){}
+}
+function observeCelebration(){
+ const panel=el("mq17Companion");if(!panel)return;
+ let played=false;
+ const observer=new MutationObserver(()=>{
+  if(panel.classList.contains("is-good")&&!played){
+   played=true;panel.classList.add("mq18-celebrate");successSound();
+   setTimeout(()=>panel.classList.remove("mq18-celebrate"),900);
+  }
+  if(!panel.classList.contains("is-good"))played=false;
+ });
+ observer.observe(panel,{attributes:true,attributeFilter:["class"]});
+}
+function bootCelebration(){
+ observeCelebration();
+ const observer=new MutationObserver(()=>observeCelebration());
+ observer.observe(document.body,{childList:true,subtree:true});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bootCelebration,{once:true});else bootCelebration();
 window.MQ18={version:"18.0.0",getQuestionsForTopic:topic=>Array.isArray(window.Q)?window.Q.filter(q=>q.topic===topic):[],getSessionTopics:()=>window.session&&Array.isArray(window.session.items)?[...new Set(window.session.items.map(q=>q.topic))]:[]};
 })();
