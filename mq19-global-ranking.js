@@ -32,7 +32,7 @@
   function rankingHost() {
     return $("#view-ranking") || $('[data-view-panel="ranking"]') ||
       $(".view-ranking") || $("#rankingRows")?.closest(".view") ||
-      $("#rankingRows")?.parentElement || $(".main-content");
+      $("#rankingRows")?.parentElement;
   }
 
   function ensurePanel() {
