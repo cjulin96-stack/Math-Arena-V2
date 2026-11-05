@@ -13,11 +13,11 @@
   const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
   const save = value => localStorage.setItem(KEY, JSON.stringify(value));
   function applyIdentity() {
-    document.title = "MathQuest 15.0 — Empire Universe";
+    document.title = "MathQuest 17.0 — Empire Universe";
     const badge = document.querySelector(".brand small");
-    if (badge) badge.textContent = "15.0";
+    if (badge) badge.textContent = "17.0";
     document.querySelectorAll(".mq14-launch-tag").forEach(el => {
-      el.textContent = "MATHQUEST 16.0 · PORTAL DE APRENDIZADO";
+      el.textContent = "MATHQUEST 17.0 · PORTAL DE APRENDIZADO";
     });
     document.body.classList.add("mq15-active");
   }
@@ -53,7 +53,7 @@
   }
   function challengeMarkup() {
     return `<div class="mq15-daily-launch" id="mq15DailyLaunch"><span class="mq15-daily-icon">⚡</span><span><b>Desafio diário</b><small>Uma missão nova de matemática</small></span><button type="button" id="mq15DailyOpen">JOGAR</button></div>
-    <div class="mq15-overlay" id="mq15Overlay" aria-hidden="true"><section class="mq15-dialog" role="dialog" aria-modal="true" aria-labelledby="mq15Title"><button class="mq15-close" id="mq15Close" aria-label="Fechar">×</button><div class="mq15-dialog-kicker">MATHQUEST 15.0 · MISSÃO EXTRA</div><h2 id="mq15Title">Desafio diário</h2><div class="mq15-progress"><i id="mq15Progress"></i></div><p class="mq15-counter" id="mq15Counter">Questão 1 de 3</p><h3 id="mq15Question"></h3><div class="mq15-options" id="mq15Options"></div><p class="mq15-feedback" id="mq15Feedback" aria-live="polite"></p><button class="mq15-next" id="mq15Next" disabled>CONTINUAR</button></section></div>`;
+    <div class="mq15-overlay" id="mq15Overlay" aria-hidden="true"><section class="mq15-dialog" role="dialog" aria-modal="true" aria-labelledby="mq15Title"><button class="mq15-close" id="mq15Close" aria-label="Fechar">×</button><div class="mq15-dialog-kicker">MATHQUEST 17.0 · MISSÃO EXTRA</div><h2 id="mq15Title">Desafio diário</h2><div class="mq15-progress"><i id="mq15Progress"></i></div><p class="mq15-counter" id="mq15Counter">Questão 1 de 3</p><h3 id="mq15Question"></h3><div class="mq15-options" id="mq15Options"></div><p class="mq15-feedback" id="mq15Feedback" aria-live="polite"></p><button class="mq15-next" id="mq15Next" disabled>CONTINUAR</button></section></div>`;
   }
   function mountChallenge() {
     if (document.getElementById("mq15DailyLaunch")) return;
