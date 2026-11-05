@@ -1,0 +1,19 @@
+/* MathQuest 19.0 — painel do ranking global */
+.mq-global-ranking{position:relative;margin:0 0 22px;padding:20px;border:1px solid var(--border,#e5e7ef);border-radius:20px;background:var(--panel,#fff);box-shadow:0 10px 28px #2420470b}
+.mqgr-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.mqgr-kicker{font-size:9px;font-weight:900;letter-spacing:1.4px;color:#7865d8}
+.mqgr-head h2{margin:5px 0;font-size:clamp(20px,5vw,27px);color:var(--text,#24213b)}
+.mqgr-head p,.mqgr-foot{margin:0;color:var(--muted,#77758b);font-size:12px;line-height:1.5}
+#mqgr-refresh{border:0;border-radius:11px;padding:10px 13px;background:#7058df;color:#fff;font-weight:800;cursor:pointer}
+.mqgr-status{padding:11px 13px;border-radius:11px;background:#f1efff;color:#51429b;font-size:12px;margin-bottom:12px;overflow-wrap:anywhere}
+.mqgr-status.success{background:#eaf9f1;color:#16764c}.mqgr-status.error{background:#fff0f0;color:#a32d3b}
+.mqgr-table-wrap{overflow:hidden;border:1px solid var(--border,#e5e7ef);border-radius:13px}
+.mqgr-table-head,.mqgr-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:10px;padding:12px}
+.mqgr-table-head{background:var(--surface,#f6f5fb);font-size:9px;font-weight:900;letter-spacing:.8px;color:var(--muted,#77758b)}
+.mqgr-row{border-top:1px solid var(--border,#e5e7ef);font-size:13px}.mqgr-row:first-child{border-top:0}
+.mqgr-you{background:#f1efff}.mqgr-position{font-size:15px;color:#7962dc}
+.mqgr-player{display:flex;align-items:center;gap:9px;min-width:0;font-weight:750}.mqgr-player>span{overflow-wrap:anywhere}.mqgr-player i{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:11px;background:#e8e2ff;color:#5945b7;font-style:normal;font-weight:900}
+.mqgr-player small{color:#735bd5;font-weight:900}.mqgr-row>strong{white-space:nowrap;font-size:12px}
+.mqgr-empty{padding:24px;text-align:center;color:var(--muted,#77758b);font-size:13px}
+.mqgr-foot{margin-top:12px}
+@media(max-width:420px){.mq-global-ranking{padding:14px}.mqgr-table-head,.mqgr-row{grid-template-columns:42px minmax(0,1fr) auto;gap:7px;padding:10px 8px}.mqgr-row{font-size:12px}.mqgr-player i{flex-basis:28px;width:28px;height:28px}}
