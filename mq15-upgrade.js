@@ -1,4 +1,4 @@
-/* MathQuest 15.0 — evolução funcional e visual */
+/* MathQuest 16.0 — evolução funcional e visual */
 (() => {
   "use strict";
   const KEY = "mq15_daily_challenge_v1";
@@ -17,7 +17,7 @@
     const badge = document.querySelector(".brand small");
     if (badge) badge.textContent = "15.0";
     document.querySelectorAll(".mq14-launch-tag").forEach(el => {
-      el.textContent = "MATHQUEST 15.0 · PORTAL DE APRENDIZADO";
+      el.textContent = "MATHQUEST 16.0 · PORTAL DE APRENDIZADO";
     });
     document.body.classList.add("mq15-active");
   }
@@ -95,7 +95,7 @@
     if(locked)return; locked=true;
     const q=questions[order[step]], good=i===q.ok;
     document.querySelectorAll(".mq15-option").forEach((el,n)=>{el.disabled=true;if(n===q.ok)el.classList.add("is-correct");else if(n===i)el.classList.add("is-wrong");});
-    if(good)points+=10;
+    if(good){points+=10;if(typeof window.MQ16RewardCrystal==='function')window.MQ16RewardCrystal(1);}
     document.getElementById("mq15Feedback").textContent=(good?"Muito bem! +10 pontos. ":"Vamos aprender: ")+q.why;
     const next=document.getElementById("mq15Next"); next.disabled=false;
     next.textContent=step===2?"FINALIZAR":"PRÓXIMA QUESTÃO";
