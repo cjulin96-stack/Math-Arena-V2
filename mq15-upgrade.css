@@ -1,27 +1,39 @@
-/* MathQuest 15.0 — movimento e apresentação responsiva */
-.mq14-launch-mascot .mq14-mascot {
-  width: 112px;
-  height: 130px;
-  overflow: visible;
-  filter: drop-shadow(0 8px 14px #0005);
-}
-.mq14-launch-mascot { padding: 2px; }
-.mq14-launch .mq14-mascot { animation: mq15MascotFloat 2.4s ease-in-out infinite; }
-.mq15-question-enter { animation: mq15QuestionIn .38s cubic-bezier(.2,.8,.2,1) both; }
-.mq15-answer-enter { animation: mq15AnswerIn .34s ease both; animation-delay: calc(var(--mq15-order, 0) * 65ms); }
-.answer.mq15-answer-enter { will-change: transform, opacity; }
-@keyframes mq15MascotFloat {
-  0%,100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
-}
-@keyframes mq15QuestionIn {
-  from { opacity: 0; transform: translateY(12px) scale(.985); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes mq15AnswerIn {
-  from { opacity: 0; transform: translateY(9px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .mq14-launch .mq14-mascot, .mq15-question-enter, .mq15-answer-enter { animation: none !important; }
-}
+/* MathQuest 15.0 — interface, microinterações e desafio diário */
+.mq15-active .mq14-launch-mascot .mq14-mascot{width:124px;height:138px;overflow:visible;filter:drop-shadow(0 12px 20px #0005)}
+.mq15-active .mq14-launch{isolation:isolate}
+.mq15-active .mq14-launch .mq14-mascot{animation:mq15MascotFloat 2.5s ease-in-out infinite}
+.mq15-question-enter{animation:mq15QuestionIn .38s cubic-bezier(.2,.8,.2,1) both}
+.mq15-answer-enter{animation:mq15AnswerIn .34s ease both;animation-delay:calc(var(--mq15-order,0)*65ms)}
+.mq15-tap{animation:mq15Tap .24s ease}
+.mq15-daily-launch{position:relative;z-index:2;display:flex;align-items:center;gap:13px;margin:0 0 22px;padding:15px 17px;border:1px solid #b9a9ff;border-radius:18px;background:linear-gradient(110deg,#21194e,#5944b6 65%,#8468e8);color:#fff;box-shadow:0 12px 28px #3c2b8833}
+.mq15-daily-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:14px;background:#ffffff20;font-size:24px}
+.mq15-daily-launch span:nth-child(2){display:grid;gap:3px;flex:1}
+.mq15-daily-launch b{font-size:14px;letter-spacing:.1px}
+.mq15-daily-launch small{font-size:11px;color:#e0d9ff}
+.mq15-daily-launch button,.mq15-next{border:0;border-radius:11px;padding:11px 15px;background:#fff;color:#4934a4;font-size:11px;font-weight:950;letter-spacing:.5px}
+.mq15-overlay{position:fixed;inset:0;z-index:99999;display:none;place-items:center;padding:18px;background:#090d1dcc;backdrop-filter:blur(8px)}
+.mq15-overlay.is-open{display:grid;animation:mq15Fade .2s ease both}
+.mq15-dialog{position:relative;width:min(100%,480px);padding:27px;border:1px solid #ffffff30;border-radius:25px;background:linear-gradient(145deg,#171b3b,#29205d);color:#fff;box-shadow:0 25px 80px #0008}
+.mq15-close{position:absolute;right:15px;top:12px;border:0;background:#ffffff18;color:#fff;border-radius:50%;width:34px;height:34px;font-size:24px}
+.mq15-dialog-kicker{font-size:9px;font-weight:950;letter-spacing:1.8px;color:#b9a9ff}
+.mq15-dialog h2{font-size:25px;margin:12px 0 17px}
+.mq15-progress{height:7px;border-radius:20px;background:#ffffff20;overflow:hidden}
+.mq15-progress i{display:block;width:0;height:100%;border-radius:20px;background:linear-gradient(90deg,#8d79ff,#63e0bb);transition:width .3s}
+.mq15-counter{font-size:10px;color:#bdb7df;font-weight:800;letter-spacing:1px;margin:17px 0 8px}
+.mq15-dialog h3{font-size:19px;line-height:1.4;margin:0 0 17px}
+.mq15-options{display:grid;gap:9px}
+.mq15-option{width:100%;text-align:left;padding:13px 15px;border:1px solid #ffffff35;border-radius:13px;background:#ffffff0d;color:#fff;font-weight:800;transition:.18s}
+.mq15-option:enabled:active{transform:scale(.985)}
+.mq15-option.is-correct{border-color:#51d9a8;background:#1c785d55}
+.mq15-option.is-wrong{border-color:#ff8192;background:#9c344455}
+.mq15-option:disabled{opacity:1}
+.mq15-feedback{min-height:40px;margin:14px 0;color:#d9d2ff;font-size:12px;line-height:1.55}
+.mq15-next{width:100%;background:linear-gradient(100deg,#9b87ff,#c2b4ff);color:#20164e}
+.mq15-next:disabled{opacity:.4}
+@keyframes mq15MascotFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@keyframes mq15QuestionIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes mq15AnswerIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes mq15Tap{50%{transform:scale(.97)}}
+@keyframes mq15Fade{from{opacity:0}to{opacity:1}}
+@media(max-width:600px){.mq15-daily-launch{gap:10px;padding:13px}.mq15-daily-launch b{font-size:12px}.mq15-daily-launch small{font-size:10px}.mq15-daily-launch button{padding:10px}.mq15-dialog{padding:23px 19px}}
+@media(prefers-reduced-motion:reduce){.mq15-active .mq14-launch .mq14-mascot,.mq15-question-enter,.mq15-answer-enter,.mq15-tap{animation:none!important}}
