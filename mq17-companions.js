@@ -17,7 +17,7 @@
   let state = load();
   let combo = 0;
   let currentQuestion = "";
-  let introShownFor = "";
+  let currentLessonKey = "";
   let hideTimer = null;
   const handled = new Set();
 
@@ -88,15 +88,16 @@
     if (!node) return;
     const q = (node.textContent || "").replace(/\s+/g, " ").trim().slice(0, 220);
     if (!q || q === currentQuestion) return;
+    const title = lessonTitle(node);
+    const lessonKey = title || "lesson";
+    if (currentLessonKey && lessonKey !== currentLessonKey) { currentQuestion = ""; combo = 0; }
+    currentLessonKey = lessonKey;
     const first = !currentQuestion;
     currentQuestion = q;
-    const title = lessonTitle(node);
-    const lessonKey = title || q.slice(0, 50);
-    if (first && introShownFor !== lessonKey) {
-      introShownFor = lessonKey;
+    if (first) {
       const p = persona();
       speak(title ? p.hello + " Tema de hoje: " + title : p.hello, "is-intro", false);
-    } else if (!first) {
+    } else {
       speak("Próxima etapa! Leia com atenção e confie no seu raciocínio.", "is-intro", false);
     }
   }
@@ -149,11 +150,7 @@
   }
   function observe() {
     checkQuestion();
-    const observer = new MutationObserver(() => {
-      checkQuestion();
-      const panel = document.getElementById("mq17Companion");
-      if (panel && panel.classList.contains("is-visible")) panel.querySelector("#mq17Avatar").innerHTML = mascotArt();
-    });
+    const observer = new MutationObserver(() => { checkQuestion(); });
     observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["class", "hidden", "aria-invalid"] });
     document.addEventListener("click", onClick, true);
     window.addEventListener("storage", event => {
