@@ -1,4 +1,4 @@
-const CACHE="mathquest-15-build2";
+const CACHE="mathquest-15-build3";
 const ASSETS=["./mq15-upgrade.js","./mq15-upgrade.css"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
@@ -14,6 +14,10 @@ async function upgradedPage(request){
   let html=await network.text();
   html=html.replace("<title>MathQuest 11.0 — Nexus Ultimate</title>","<title>MathQuest 15.0 — Empire Universe Complete</title>");
   html=html.replace('<small style="font-size:10px;color:#9b93ad">10.5</small>','<small style="font-size:10px;color:#9b93ad">15.0</small>');
+  const bridgeAnchor="updateUltimatePanel();\n})();\n\n\n/* ===== MATHQUEST 14.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */";
+  if(html.includes(bridgeAnchor)&&!html.includes('Object.defineProperties(window,{\n  S:{configurable:true')){
+    html=html.replace(bridgeAnchor,"updateUltimatePanel();\nObject.defineProperties(window,{\n  S:{configurable:true,get:()=>S,set:value=>{S=value}},\n  session:{configurable:true,get:()=>session,set:value=>{session=value}},\n  $:{configurable:true,get:()=>$},\n  save:{configurable:true,get:()=>save},\n  toast:{configurable:true,get:()=>toast},\n  render:{configurable:true,get:()=>render},\n  renderWorlds:{configurable:true,get:()=>renderWorlds},\n  renderShop:{configurable:true,get:()=>renderShop,set:value=>{renderShop=value}},\n  start:{configurable:true,get:()=>start,set:value=>{start=value}},\n  question:{configurable:true,get:()=>question,set:value=>{question=value}},\n  check:{configurable:true,get:()=>check,set:value=>{check=value}},\n  finish:{configurable:true,get:()=>finish,set:value=>{finish=value}},\n  showView:{configurable:true,get:()=>showView,set:value=>{showView=value}}\n});\n})();\n\n\n/* ===== MATHQUEST 14.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */");
+  }
   html=html.replaceAll("MATHQUEST 14.0","MATHQUEST 15.0").replaceAll("MathQuest 14.0","MathQuest 15.0").replaceAll("MathQuest 11.0","MathQuest 15.0");
   if(!html.includes("mq15-upgrade.js")){
     html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=15.0"><script defer src="./mq15-upgrade.js?v=15.0"></script></body>');
