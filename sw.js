@@ -1,5 +1,5 @@
-const CACHE="mathquest-15-build5";
-const ASSETS=["./mq15-upgrade.js?v=15.0.5","./mq15-upgrade.css?v=15.0.5"];
+const CACHE="mathquest-16-build1";
+const ASSETS=["./mq15-upgrade.js?v=16.0.1","./mq15-upgrade.css?v=16.0.1","./mq16-mascots.js?v=16.0.1","./mq16-mascots.css?v=16.0.1"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
@@ -12,17 +12,19 @@ async function upgradedPage(request){
   const network=await fetch(request,{cache:"no-store"});
   if(!network.ok)return network;
   let html=await network.text();
-  html=html.replace("<title>MathQuest 11.0 — Nexus Ultimate</title>","<title>MathQuest 15.0 — Empire Universe Complete</title>");
-  html=html.replace('<small style="font-size:10px;color:#9b93ad">10.5</small>','<small style="font-size:10px;color:#9b93ad">15.0</small>');
-  const bridgeAnchor="updateUltimatePanel();\n})();\n\n\n/* ===== MATHQUEST 14.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */";
+  html=html.replace("<title>MathQuest 11.0 — Nexus Ultimate</title>","<title>MathQuest 16.0 — Mascot Universe</title>");
+  html=html.replace('<small style="font-size:10px;color:#9b93ad">10.5</small>','<small style="font-size:10px;color:#9b93ad">16.0</small>');
+  const bridgeAnchor="updateUltimatePanel();\n})();\n\n\n/* ===== MATHQUEST 16.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */";
   if(html.includes(bridgeAnchor)&&!html.includes('Object.defineProperties(window,{\n  S:{configurable:true')){
-    html=html.replace(bridgeAnchor,"updateUltimatePanel();\nObject.defineProperties(window,{\n  S:{configurable:true,get:()=>S,set:value=>{S=value}},\n  session:{configurable:true,get:()=>session,set:value=>{session=value}},\n  $:{configurable:true,get:()=>$},\n  save:{configurable:true,get:()=>save},\n  toast:{configurable:true,get:()=>toast},\n  render:{configurable:true,get:()=>render},\n  renderWorlds:{configurable:true,get:()=>renderWorlds},\n  renderShop:{configurable:true,get:()=>renderShop,set:value=>{renderShop=value}},\n  start:{configurable:true,get:()=>start,set:value=>{start=value}},\n  question:{configurable:true,get:()=>question,set:value=>{question=value}},\n  check:{configurable:true,get:()=>check,set:value=>{check=value}},\n  finish:{configurable:true,get:()=>finish,set:value=>{finish=value}},\n  showView:{configurable:true,get:()=>showView,set:value=>{showView=value}}\n});\n})();\n\n\n/* ===== MATHQUEST 14.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */");
+    html=html.replace(bridgeAnchor,"updateUltimatePanel();\nObject.defineProperties(window,{\n  S:{configurable:true,get:()=>S,set:value=>{S=value}},\n  session:{configurable:true,get:()=>session,set:value=>{session=value}},\n  $:{configurable:true,get:()=>$},\n  save:{configurable:true,get:()=>save},\n  toast:{configurable:true,get:()=>toast},\n  render:{configurable:true,get:()=>render},\n  renderWorlds:{configurable:true,get:()=>renderWorlds},\n  renderShop:{configurable:true,get:()=>renderShop,set:value=>{renderShop=value}},\n  start:{configurable:true,get:()=>start,set:value=>{start=value}},\n  question:{configurable:true,get:()=>question,set:value=>{question=value}},\n  check:{configurable:true,get:()=>check,set:value=>{check=value}},\n  finish:{configurable:true,get:()=>finish,set:value=>{finish=value}},\n  showView:{configurable:true,get:()=>showView,set:value=>{showView=value}}\n});\n})();\n\n\n/* ===== MATHQUEST 16.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */");
   }
-  html=html.replaceAll("MATHQUEST 14.0","MATHQUEST 15.0").replaceAll("MathQuest 14.0","MathQuest 15.0").replaceAll("MathQuest 11.0","MathQuest 15.0");
+  html=html.replaceAll("MATHQUEST 16.0","MATHQUEST 15.0").replaceAll("MathQuest 16.0","MathQuest 15.0").replaceAll("MathQuest 11.0","MathQuest 15.0");
   /* Remove any older injected references, then add the current build exactly once. */
   html=html.replace(/<link\b[^>]*href=["'][^"']*mq15-upgrade\.css[^"']*["'][^>]*>/gi,"");
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq15-upgrade\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
-  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=15.0.5"><script defer src="./mq15-upgrade.js?v=15.0.5"></script></body>');
+  html=html.replace(/<link\b[^>]*href=["'][^"']*mq16-mascots\.css[^"']*["'][^>]*>/gi,"");
+  html=html.replace(/<script\b[^>]*src=["'][^"']*mq16-mascots\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
+  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=16.0.1"><link rel="stylesheet" href="./mq16-mascots.css?v=16.0.1"><script defer src="./mq15-upgrade.js?v=16.0.1"></script><script defer src="./mq16-mascots.js?v=16.0.1"></script></body>');
   const headers=new Headers(network.headers);
   ["content-length","content-encoding","content-md5","etag","last-modified"].forEach(name=>headers.delete(name));
   headers.set("cache-control","no-store");
