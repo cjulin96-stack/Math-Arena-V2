@@ -65,5 +65,5 @@ render();
 function close(){var overlay=document.getElementById("mq16Overlay");if(overlay){overlay.classList.remove("is-open");overlay.setAttribute("aria-hidden","true")}}
 window.MQ16RewardCrystal=function(amount){data=read();data.crystals+=amount||1;data.importedDay=today();save();render();var b=document.getElementById("mq16Balance");if(b){b.classList.remove("mq16-pop");requestAnimationFrame(function(){b.classList.add("mq16-pop")})}};
 function boot(){mount();var observer=new MutationObserver(function(){suppressLegacyShop();if(!document.getElementById("mq16Hub"))mount()});observer.observe(document.body,{childList:true,subtree:true})}
-if(document.readyState==="loading")document.addEventListener("DOMContentContentLoaded",boot,{once:true});else boot();
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
