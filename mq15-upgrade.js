@@ -96,7 +96,7 @@
     const q=questions[order[step]], good=i===q.ok;
     document.querySelectorAll(".mq15-option").forEach((el,n)=>{el.disabled=true;if(n===q.ok)el.classList.add("is-correct");else if(n===i)el.classList.add("is-wrong");});
     if(good)points+=10;
-    document.getElementById("mq15Feedback").textContent=(good?"Muito bem! +10 XP. ":"Vamos aprender: ")+q.why;
+    document.getElementById("mq15Feedback").textContent=(good?"Muito bem! +10 pontos. ":"Vamos aprender: ")+q.why;
     const next=document.getElementById("mq15Next"); next.disabled=false;
     next.textContent=step===2?"FINALIZAR":"PRÓXIMA QUESTÃO";
   }
@@ -113,13 +113,13 @@
     document.getElementById("mq15Counter").textContent="MISSÃO CONCLUÍDA";
     document.getElementById("mq15Question").textContent=already?"Você já concluiu o desafio de hoje!":"Você concluiu o desafio diário!";
     document.getElementById("mq15Options").innerHTML="";
-    document.getElementById("mq15Feedback").textContent=`Pontuação: ${value} de 30 XP. Volte amanhã para uma nova missão.`;
+    document.getElementById("mq15Feedback").textContent=`Pontuação: ${value} de 30 pontos. Volte amanhã para uma nova missão.`;
     const nextButton=document.getElementById("mq15Next");nextButton.disabled=false;nextButton.textContent="FECHAR";
   }
   function renderDailyStatus() {
     const d=read(), todayDone=d.day===today()&&d.completed;
     const label=document.querySelector("#mq15DailyLaunch small");
-    if(label)label.textContent=todayDone?`Concluído hoje · ${d.points||0} XP`:"Uma missão nova de matemática";
+    if(label)label.textContent=todayDone?`Concluído hoje · ${d.points||0} pontos`:"Uma missão nova de matemática";
     const button=document.getElementById("mq15DailyOpen");
     if(button)button.textContent=todayDone?"REVER":"JOGAR";
   }
