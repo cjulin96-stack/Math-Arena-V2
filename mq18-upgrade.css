@@ -15,3 +15,49 @@ body.mq18-lesson-active #mq17Companion{display:none!important}
 /* Ajuste do espaço superior da tela de ranking global */
 .view[id*="rank"] > .section-heading{margin-top:0!important}
 .view[id*="rank"] .ranking-panel{margin-top:0!important}
+
+/* MathQuest 18.1 — loading cinematic + immersive full-screen lesson */
+body.mq18-lesson-active #lessonModal{
+ position:fixed!important;inset:0!important;z-index:100000!important;
+ width:100vw!important;height:100vh!important;height:100dvh!important;
+ max-width:none!important;max-height:none!important;margin:0!important;
+ padding:0!important;border:0!important;border-radius:0!important;
+ overflow:auto!important;display:grid!important;place-items:stretch!important;
+}
+body.mq18-lesson-active #lessonModal> *{
+ width:100%!important;max-width:none!important;min-width:0!important;
+ min-height:100%!important;max-height:none!important;margin:0!important;
+ border-radius:0!important;box-sizing:border-box!important;
+}
+body.mq18-lesson-active #lessonBody{
+ width:100%!important;min-height:100vh!important;min-height:100dvh!important;
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ box-sizing:border-box!important;
+}
+.mq18-loading{
+ position:fixed;inset:0;z-index:100010;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:12px;padding:26px 20px;
+ overflow:hidden;text-align:center;color:#fff;
+ background:radial-gradient(ellipse at 50% 35%,#293e70 0%,#172747 48%,#0d172d 100%);
+ animation:mq18-loader-in .35s ease both;
+}
+.mq18-loading-kicker{font-size:9px;font-weight:1000;letter-spacing:2px;color:#c3d0ff}
+.mq18-loading-stage{position:relative;display:grid;place-items:center;width:min(76vw,290px);height:min(68vw,250px);min-height:205px}
+.mq18-loading-aura{position:absolute;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#9b8aff70,#64d9ee20 55%,transparent 72%);animation:mq18-loader-pulse 1.2s ease-in-out infinite}
+.mq18-loading-mascot{position:relative;z-index:2;display:grid;place-items:center;width:155px;height:165px;animation:mq18-loader-bounce .72s ease-in-out infinite alternate;filter:drop-shadow(0 14px 16px #0007)}
+.mq18-loading-mascot svg{width:100%;height:100%;object-fit:contain}
+.mq18-loading-mascot .mq18-mascot-emoji{font-size:105px}
+.mq18-loading-stars{position:absolute;inset:0;display:grid;place-items:center;color:#d6d0ff;font-size:14px;letter-spacing:5px;animation:mq18-loader-spin 7s linear infinite}
+.mq18-loading h2{margin:0;color:#fff;font-size:clamp(22px,6vw,30px);font-weight:950}
+.mq18-loading p{margin:0;color:#c7d3ed;font-size:12px}
+.mq18-loading-track{width:min(260px,75vw);height:7px;margin-top:13px;border-radius:20px;background:#ffffff25;overflow:hidden}
+.mq18-loading-track i{display:block;width:35%;height:100%;border-radius:20px;background:linear-gradient(90deg,#8c7cff,#65e3cb);animation:mq18-loader-progress 1.45s ease-in-out forwards}
+.mq18-celebrate .mq17-avatar svg{animation:mq18-celebrate-pop .55s cubic-bezier(.2,.9,.3,1.4)!important}
+.mq18-celebrate .mq17-avatar{box-shadow:0 0 0 5px #54dba455,0 10px 30px #17122d35!important}
+@keyframes mq18-loader-in{from{opacity:0}to{opacity:1}}
+@keyframes mq18-loader-bounce{from{transform:translateY(5px) rotate(-4deg) scale(.96)}to{transform:translateY(-12px) rotate(4deg) scale(1.04)}}
+@keyframes mq18-loader-pulse{0%,100%{transform:scale(.9);opacity:.65}50%{transform:scale(1.12);opacity:1}}
+@keyframes mq18-loader-spin{to{transform:rotate(360deg)}}
+@keyframes mq18-loader-progress{from{width:8%}to{width:100%}}
+@keyframes mq18-celebrate-pop{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.24) rotate(-8deg)}70%{transform:scale(.94) rotate(7deg)}100%{transform:scale(1) rotate(0)}}
+@media(prefers-reduced-motion:reduce){.mq18-loading,.mq18-loading *,.mq18-celebrate .mq17-avatar svg{animation:none!important}}
