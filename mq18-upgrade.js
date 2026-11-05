@@ -4,7 +4,8 @@
 if(window.MQ18UpgradeLoaded)return;
 window.MQ18UpgradeLoaded=true;
 const el=id=>document.getElementById(id);
-let lessonRun=0,lessonTimer=0;\nconst esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let lessonRun=0,lessonTimer=0;
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const shuffle=a=>{const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
 function mascot(){const svg=document.querySelector("#mq16Current .mq16-current-art svg");if(svg)return svg.outerHTML;return '<div class="mq18-mascot-emoji">'+esc(window.S&&window.S.avatar||"🦊")+'</div>'}
 function startTopic(q,isPractice){
