@@ -93,9 +93,6 @@
     const red=1+(i%5), blue=2+(i%4), total=red+blue;
     add("Probabilidade","Probabilidade simples","Uma caixa tem "+red+" bolas vermelhas e "+blue+" azuis. Qual é a chance de retirar uma vermelha?",red+"/"+total,blue+"/"+total,"1/"+total,
       "Há "+red+" resultados favoráveis entre "+total+" bolas: "+red+"/"+total+".");
-    const even=[2,3,4][i%3];
-    add("Probabilidade","Lançamento de dado","Em um dado comum, qual é a probabilidade de sair um número par?", "1/2","1/6","2/3",
-      "Os resultados pares são 2, 4 e 6: 3 de 6 possibilidades, ou 1/2.");
   }
 
   for (let i=1;i<=12;i++) {
