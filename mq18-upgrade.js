@@ -20,13 +20,14 @@ function startTopic(q,isPractice){
  window.session={q,items,index:0,correct:0,wrong:0,xp:0,gems:0,start:Date.now()};
  const modal=el("lessonModal"),body=el("lessonBody"),check=el("check");
  if(!modal||!body||!check)return;
- modal.classList.remove("hide");modal.style.display="grid";
+ modal.classList.remove("hide","hidden","mq18-force-closed");modal.hidden=false;modal.removeAttribute("aria-hidden");modal.style.removeProperty("display");modal.style.display="grid";
  if(el("lessonBar"))el("lessonBar").style.width="0%";
  if(el("heartText")&&state)el("heartText").textContent="❤️".repeat(state.lives)+"🖤".repeat(5-state.lives);
  if(el("feedback"))el("feedback").className="feedback hidden";
 
  const runId=++lessonRun;
  document.body.classList.add("mq18-lesson-active");
+ document.documentElement.classList.add("mq18-lesson-active");
  body.innerHTML='<section class="mq18-loading" role="status" aria-live="polite"><div class="mq18-loading-kicker">MATHQUEST · PREPARANDO SUA MISSÃO</div><div class="mq18-loading-stage"><div class="mq18-loading-aura"></div><div class="mq18-loading-mascot">'+mascot()+'</div><div class="mq18-loading-stars">✦　＋　✧　÷　✦</div></div><h2>Preparando '+esc(topic)+'</h2><p>Seu próximo desafio está quase pronto...</p><div class="mq18-loading-track"><i></i></div></section>';
  check.disabled=true;
  check.textContent="CARREGANDO...";
@@ -66,7 +67,7 @@ function closeLessonSafely(clickedTarget){
  const modal=el("lessonModal");
  const hideModal=()=>{
   if(modal){
-   modal.classList.add("hide","hidden");
+   modal.classList.add("hide","hidden","mq18-force-closed");
    modal.setAttribute("aria-hidden","true");
    modal.hidden=true;
    modal.style.setProperty("display","none","important");
@@ -86,6 +87,7 @@ function closeLessonSafely(clickedTarget){
   const summary=el("summaryModal");
   if(summary){summary.classList.add("hide","hidden");summary.hidden=true;summary.style.setProperty("display","none","important")}
   document.body.classList.remove("mq18-lesson-active");
+  document.documentElement.classList.remove("mq18-lesson-active");
  };
  lessonRun++;clearTimeout(lessonTimer);
  // Switch the underlying view first; some view transitions re-open the lesson overlay.
@@ -101,14 +103,6 @@ document.addEventListener("click",event=>{
  event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
  if(!confirm("Sair da lição? Esta sessão não será contabilizada como concluída."))return;
  closeLessonSafely(target);
-},true);
-window.MQ18CloseLesson=closeLessonSafely;
-document.addEventListener("click",event=>{
- const target=event.target&&event.target.closest&&event.target.closest("#closeLesson");
- if(!target)return;
- event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
- if(!confirm("Sair da lição? Esta sessão não será contabilizada como concluída."))return;
- closeLessonSafely();
 },true);
 window.MQ18CloseLesson=closeLessonSafely;
 function successSound(){
