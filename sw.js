@@ -30,10 +30,10 @@ const ASSETS = `
 <link rel="stylesheet" href="./mq16-mascots.css?v=20.4.1">
 <link rel="stylesheet" href="./mq17-companions.css?v=20.4.1">
 <link rel="stylesheet" href="./mq18-upgrade.css?v=20.4.1">
-<script defer src="./mq15-upgrade.js?v=20.4.1"><\\/script>
-<script defer src="./mq16-mascots.js?v=20.4.1"><\\/script>
-<script defer src="./mq17-companions.js?v=20.4.1"><\\/script>
-<script defer src="./mq18-upgrade.js?v=20.4.1"><\\/script>`;
+<script defer src="./mq15-upgrade.js?v=20.4.1"></script>
+<script defer src="./mq16-mascots.js?v=20.4.1"></script>
+<script defer src="./mq17-companions.js?v=20.4.1"></script>
+<script defer src="./mq18-upgrade.js?v=20.4.1"></script>`;
 
 async function upgradedPage(request) {
   const response = await fetch(request, {cache:"no-store"});
