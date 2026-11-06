@@ -1,0 +1,42 @@
+/* MathQuest 20.0 — refinamento visual responsivo */
+:root{--mq20-ink:#24213b;--mq20-muted:#77758b;--mq20-line:#e8e5f1}
+.mq16-mascot-hub{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(170px,220px);align-items:center;gap:16px 22px;padding:clamp(16px,3vw,24px);margin-bottom:22px}
+.mq16-hub-copy{min-width:0}
+.mq16-hub-side{width:100%;min-width:0;grid-template-columns:1fr;align-content:center}
+.mq16-current{grid-column:1/-1;min-width:0;margin-top:2px;padding:14px 0 0}
+.mq16-current span{min-width:0}
+.mq16-current b,.mq16-current small{overflow-wrap:anywhere}
+.mq16-overlay{padding:clamp(8px,2vw,18px)}
+.mq16-shop{width:min(100%,960px);max-height:min(92dvh,940px);padding:clamp(16px,3vw,28px)}
+.mq16-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:14px}
+.mq16-mascot-card{display:flex;flex-direction:column;align-items:stretch}
+.mq16-mascot-card button{margin-top:auto;min-height:42px}
+.mq16-mascot-art{height:clamp(125px,22vw,170px)}
+.mq16-mascot-art svg{max-width:100%;max-height:100%}
+#view-profile .profile-hero{box-shadow:0 16px 38px #32236b20;border:1px solid #ffffff30}
+#view-profile .profile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#view-profile .profile-card{position:relative;overflow:hidden;box-shadow:0 8px 22px #28204408}
+#view-profile .profile-card:after{content:"";position:absolute;inset:auto 0 0;height:3px;background:linear-gradient(90deg,#7356e8,#62c9cf)}
+#view-profile .profile-card strong{display:block;font-size:clamp(22px,5vw,30px);letter-spacing:-.8px;color:var(--mq20-ink)}
+#view-profile .profile-section{box-shadow:0 8px 24px #28204408}
+#view-profile .profile-section h3{display:flex;align-items:center;gap:8px}
+#view-profile .profile-form input:focus{outline:3px solid #7356e826;border-color:#7356e8}
+.achievement-grid,#achievementGrid,[class*="achievement-grid"]{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:13px}
+.achievement,.achievement-card,[class*="achievement-card"]{min-width:0;display:flex;align-items:center;gap:13px;padding:15px;border:1px solid var(--mq20-line);border-radius:16px;background:#fff;box-shadow:0 7px 20px #28204408;transition:transform .2s,border-color .2s}
+.achievement:not(.locked),.achievement-card:not(.locked){border-color:#c8ecdc;background:linear-gradient(130deg,#fff,#f4fff9)}
+.achievement.locked{opacity:.78;background:#f8f8fb}
+.achievement .medal,.achievement-card .medal{flex:0 0 46px;width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:#f0edff;font-size:24px}
+.achievement b,.achievement strong{display:block;font-size:13px;color:var(--mq20-ink)}
+.achievement small{display:block;margin-top:4px;color:var(--mq20-muted);font-size:11px;line-height:1.45}
+#mq-global-ranking{margin:0 0 18px!important}
+#mq-global-ranking .mqgr-head{margin-bottom:12px}
+#mq-global-ranking .mqgr-status{margin-bottom:10px}
+@media(max-width:560px){
+ .mq16-mascot-hub{grid-template-columns:minmax(0,1fr);gap:12px}
+ .mq16-hub-side{grid-template-columns:1fr}
+ .mq16-current{grid-column:1}
+ .mq16-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #view-profile .profile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .achievement-grid,#achievementGrid,[class*="achievement-grid"]{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.achievement,.achievement-card{transition:none}}
