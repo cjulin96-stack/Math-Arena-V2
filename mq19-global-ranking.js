@@ -30,7 +30,18 @@
   }
 
   function rankingHost() {
-    return $("#view-ranking") || $('[data-view-panel="ranking"]') ||
+    const visible = el => !!el && el.getClientRects().length > 0 &&
+      getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden";
+    const views = Array.from(document.querySelectorAll(".view,[data-view-panel],main > section,main > div"));
+    const globalView = views.find(el => {
+      if (!visible(el)) return false;
+      const heading = el.querySelector("h1,h2,h3,.section-heading,[role=heading]");
+      const label = (heading?.textContent || "").toLowerCase();
+      return label.includes("ranking global") || (label.includes("global") && /ranking|classifica/.test((el.textContent||"").slice(0,700).toLowerCase()));
+    });
+    return globalView || $("#view-global") || $("#view-global-ranking") ||
+      $('[data-view-panel="global"]') || $(".view-global") ||
+      $("#view-ranking") || $('[data-view-panel="ranking"]') ||
       $(".view-ranking") || $("#rankingRows")?.closest(".view") ||
       $("#rankingRows")?.parentElement;
   }
