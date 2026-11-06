@@ -1,5 +1,5 @@
-const CACHE="mathquest-20-hyper-build4";
-const ASSETS=["./mq15-upgrade.js?v=19.1.1","./mq15-upgrade.css?v=19.1.1","./mq16-mascots.js?v=19.1.1","./mq16-mascots.css?v=19.1.1","./mq17-companions.js?v=19.1.1","./mq17-companions.css?v=19.1.1","./mq18-upgrade.js?v=20.2","./mq18-upgrade.css?v=19.1.1","./mq19-global-ranking.js?v=19.1.1","./mq19-global-ranking.css?v=20.0","./mq20-expansion.css?v=20.0","./mq20-expansion.js?v=20.0"];
+const CACHE="mathquest-20-hyper-build5";
+const ASSETS=["./mq15-upgrade.js?v=19.1.1","./mq15-upgrade.css?v=19.1.1","./mq16-mascots.js?v=19.1.1","./mq16-mascots.css?v=19.1.1","./mq17-companions.js?v=19.1.1","./mq17-companions.css?v=19.1.1","./mq18-upgrade.js?v=20.3","./mq18-upgrade.css?v=20.3","./mq19-global-ranking.js?v=19.1.1","./mq19-global-ranking.css?v=20.0","./mq20-expansion.css?v=20.0","./mq20-expansion.js?v=20.0"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
