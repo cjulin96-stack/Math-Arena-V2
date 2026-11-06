@@ -9,8 +9,8 @@ self.addEventListener("activate",event=>{
     .then(clients=>Promise.all(clients.map(client=>client.navigate(client.url).catch(()=>null)))));
 });
 async function upgradedPage(request){
-  const network=await fetch(request,{cache:"no-store"});
-  if(!network.ok)return network;
+  html=html.replace(/<title>[^<]*<\/title>/i,"<title>MathQuest 19.1 — Learning Evolution</title>");
+  html=html.replace(/(<small\b[^>]*>)\s*17\.0\s*(<\/small>)/i,"$1 19.1 $2");
   let html=await network.text();
   html=html.replace(/<title>[^<]*<\\/title>/i,"<title>MathQuest 19.1 — Learning Evolution</title>");
   html=html.replace(/(<small\\b[^>]*>)\\s*17\\.0\\s*(<\\/small>)/i,"$1 19.1 $2");
