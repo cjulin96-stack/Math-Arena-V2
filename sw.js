@@ -45,7 +45,7 @@ async function upgradedPage(request) {
     if (!html.includes(BRIDGE_ANCHOR)) return response;
     html = html.replace(BRIDGE_ANCHOR, BRIDGE);
   }
-  if (!html.includes("mq19-global-ranking.js?v=20.4.1")) {
+  if (!html.includes("mq18-upgrade.js?v=20.4.1")) {
     html = html.replace("</body>", ASSETS + "\n</body>");
   }
   const headers = new Headers(response.headers);
