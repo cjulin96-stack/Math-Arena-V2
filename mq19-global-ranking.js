@@ -32,39 +32,57 @@
   function rankingHost() {
     const visible = el => !!el && el.getClientRects().length > 0 &&
       getComputedStyle(el).display !== "none" && getComputedStyle(el).visibility !== "hidden";
-    const views = Array.from(document.querySelectorAll(".view,[data-view-panel],main > section,main > div"));
-    const globalView = views.find(el => {
-      if (!visible(el)) return false;
-      const heading = el.querySelector("h1,h2,h3,.section-heading,[role=heading]");
-      const label = (heading?.textContent || "").toLowerCase();
-      return label.includes("ranking global") || (label.includes("global") && /ranking|classifica/.test((el.textContent||"").slice(0,700).toLowerCase()));
-    });
-    return globalView || $("#view-global") || $("#view-global-ranking") ||
+    const labelOf = el => (el.textContent || "").replace(/\\s+/g," ").trim().toLowerCase();
+    const activeViews = Array.from(document.querySelectorAll(".view.active,[data-view-panel]:not([hidden])"))
+      .filter(visible);
+    const candidates = activeViews.map(view => {
+      const headings = Array.from(view.querySelectorAll("h1,h2,h3,[role=heading],.section-heading"));
+      const heading = headings.find(h => /ranking\\s*global|global\\s*(ranking|classifica)/i.test(labelOf(h)));
+      const content = labelOf(view).slice(0,900);
+      return {view,heading,match:!!heading || (/\\bglobal\\b/.test(content) && /ranking|classifica/.test(content))};
+    }).filter(x=>x.match);
+    candidates.sort((a,b)=>a.view.querySelectorAll("*").length-b.view.querySelectorAll("*").length);
+    if(candidates.length) return candidates[0].view;
+    return $("#view-global") || $("#view-global-ranking") ||
       $('[data-view-panel="global"]') || $(".view-global") ||
       $("#view-ranking") || $('[data-view-panel="ranking"]') ||
       $(".view-ranking") || $("#rankingRows")?.closest(".view") ||
       $("#rankingRows")?.parentElement;
   }
 
+  function placePanel(host, panel) {
+    if (!host || !panel) return;
+    host.classList.add("mq20-global-host");
+    const heading = Array.from(host.querySelectorAll("h1,h2,h3,[role=heading],.section-heading"))
+      .find(el => /ranking\\s*global|global\\s*(ranking|classifica)/i.test((el.textContent||"").replace(/\\s+/g," ").trim()));
+    const anchor = heading && (heading.matches(".section-heading") ? heading : heading.closest(".section-heading") || heading);
+    if (anchor && anchor.parentElement === host) {
+      if (anchor.nextElementSibling !== panel) anchor.insertAdjacentElement("afterend", panel);
+    } else if (panel.parentElement !== host) {
+      host.prepend(panel);
+    }
+  }
+
   function ensurePanel() {
     const host = rankingHost();
     if (!host) return null;
     let panel = $("#mq-global-ranking");
-    if (panel) return panel;
-    panel = document.createElement("section");
-    panel.id = "mq-global-ranking";
-    panel.className = "mq-global-ranking";
-    panel.innerHTML = `
-      <div class="mqgr-head">
-        <div><span class="mqgr-kicker">MATHQUEST · COMPETIÇÃO ONLINE</span><h2>🌍 Ranking Global</h2>
-        <p>Jogadores de todas as contas, classificados pelo XP acumulado.</p></div>
-        <button type="button" id="mqgr-refresh">↻ Atualizar</button>
-      </div>
-      <div id="mqgr-status" class="mqgr-status" role="status">Conectando ao ranking...</div>
-      <div class="mqgr-table-wrap"><div class="mqgr-table-head"><span>POSIÇÃO</span><span>JOGADOR</span><span>XP</span></div><div id="mqgr-rows"></div></div>
-      <p class="mqgr-foot">Desempate: respostas corretas. O ranking é atualizado quando o progresso é sincronizado.</p>`;
-    host.prepend(panel);
-    $("#mqgr-refresh", panel).addEventListener("click", refresh);
+    if (!panel) {
+      panel = document.createElement("section");
+      panel.id = "mq-global-ranking";
+      panel.className = "mq-global-ranking";
+      panel.innerHTML = `
+        <div class="mqgr-head">
+          <div><span class="mqgr-kicker">MATHQUEST · COMPETIÇÃO ONLINE</span><h2>🌍 Ranking Global</h2>
+          <p>Jogadores de todas as contas, classificados pelo XP acumulado.</p></div>
+          <button type="button" id="mqgr-refresh">↻ Atualizar</button>
+        </div>
+        <div id="mqgr-status" class="mqgr-status" role="status">Conectando ao ranking...</div>
+        <div class="mqgr-table-wrap"><div class="mqgr-table-head"><span>POSIÇÃO</span><span>JOGADOR</span><span>XP</span></div><div id="mqgr-rows"></div></div>
+        <p class="mqgr-foot">Desempate: respostas corretas. O ranking é atualizado quando o progresso é sincronizado.</p>`;
+      $("#mqgr-refresh", panel).addEventListener("click", refresh);
+    }
+    placePanel(host,panel);
     return panel;
   }
 
