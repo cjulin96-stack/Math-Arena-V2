@@ -98,7 +98,7 @@ function closeLessonSafely(clickedTarget){
  setTimeout(hideModal,360);
 }
 document.addEventListener("click",event=>{
- const target=event.target&&event.target.closest&&event.target.closest("#closeLesson");
+ const target=event.target&&event.target.closest&&event.target.closest("#closeLesson,#close");
  if(!target)return;
  event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
  if(!confirm("Sair da lição? Esta sessão não será contabilizada como concluída."))return;
