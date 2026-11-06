@@ -9,11 +9,11 @@ self.addEventListener("activate",event=>{
     .then(clients=>Promise.all(clients.map(client=>client.navigate(client.url).catch(()=>null)))));
 });
 async function upgradedPage(request){
+  const network=await fetch(request,{cache:"no-store"});
+  if(!network.ok)return network;
+  let html=await network.text();
   html=html.replace(/<title>[^<]*<\/title>/i,"<title>MathQuest 19.1 — Learning Evolution</title>");
   html=html.replace(/(<small\b[^>]*>)\s*17\.0\s*(<\/small>)/i,"$1 19.1 $2");
-  let html=await network.text();
-  html=html.replace(/<title>[^<]*<\\/title>/i,"<title>MathQuest 19.1 — Learning Evolution</title>");
-  html=html.replace(/(<small\\b[^>]*>)\\s*17\\.0\\s*(<\\/small>)/i,"$1 19.1 $2");
   html=html.replace('<small style="font-size:10px;color:#9b93ad">10.5</small>','<small style="font-size:10px;color:#9b93ad">18.0</small>');
   const bridgeAnchor="updateUltimatePanel();\n})();\n\n\n/* ===== MATHQUEST 16.0 EMPIRE UNIVERSE: progressive enhancement layer ===== */";
   if(html.includes(bridgeAnchor)&&!html.includes('Object.defineProperties(window,{\n  S:{configurable:true')){
