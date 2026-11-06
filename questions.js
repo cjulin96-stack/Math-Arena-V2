@@ -272,11 +272,11 @@ window.MATHQUEST_QUESTIONS = [
   // Geometria: perímetro, área e ângulos.
   for (let i=1;i<=8;i++) {
     const w=4+i, h=3+(i%5);
-    add(3,"Geometria","Área do retângulo","Calcule a área do retângulo.",w+" cm × "+h+" cm",w*h+" cm²",[(w+h)+" cm²",(w*h+4)+" cm²",(2*w+2*h)+" cm²","Área é base multiplicada pela altura.","Multiplique as duas dimensões.");
+    add(3,"Geometria","Área do retângulo","Calcule a área do retângulo.",w+" cm × "+h+" cm",w*h+" cm²",[(w+h)+" cm²",(w*h+4)+" cm²",(2*w+2*h)+" cm²"],"Área é base multiplicada pela altura.","Multiplique as duas dimensões.");
     const side=3+i;
-    add(3,"Geometria","Perímetro do quadrado","Qual é o perímetro do quadrado?", "Lado = "+side+" cm",4*side+" cm",[side*side+" cm",(3*side)+" cm",(4*side+2)+" cm","Um quadrado tem quatro lados iguais.","Multiplique a medida do lado por 4.");
+    add(3,"Geometria","Perímetro do quadrado","Qual é o perímetro do quadrado?", "Lado = "+side+" cm",4*side+" cm",[side*side+" cm",(3*side)+" cm",(4*side+2)+" cm"],"Um quadrado tem quatro lados iguais.","Multiplique a medida do lado por 4.");
     const angle=30+i*5;
-    add(3,"Geometria","Ângulos do triângulo","Um triângulo tem ângulos de "+angle+"° e 60°. Quanto mede o terceiro?",(angle+"° + 60° + ? = 180°"),(120-angle)+"°",[(110-angle)+"°",(130-angle)+"°",(180-angle)+"°","A soma dos ângulos internos de um triângulo é 180°.","Subtraia os dois ângulos conhecidos de 180°.");
+    add(3,"Geometria","Ângulos do triângulo","Um triângulo tem ângulos de "+angle+"° e 60°. Quanto mede o terceiro?",(angle+"° + 60° + ? = 180°"),(120-angle)+"°",[(110-angle)+"°",(130-angle)+"°",(180-angle)+"°"],"A soma dos ângulos internos de um triângulo é 180°.","Subtraia os dois ângulos conhecidos de 180°.");
   }
 
   // Porcentagem: descontos, aumentos e fração percentual.
@@ -302,11 +302,11 @@ window.MATHQUEST_QUESTIONS = [
     const values=[i+2,i+4,i+6], mean=values.reduce((s,v)=>s+v,0)/3;
     add(2,"Estatística","Média aritmética","Qual é a média de "+values.join(", ")+"?","("+values.join(" + ")+") ÷ 3",mean,[mean+1,mean-1,mean+2],"Some os valores e divida pela quantidade de números.","A média é a soma dividida pela quantidade.");
     const favorable=1+(i%4), total=6;
-    add(2,"Probabilidade","Chance de um evento","Há "+favorable+" resultados favoráveis em "+total+" resultados igualmente possíveis. Qual é a probabilidade?",""+favorable+"/"+total, (favorable/total*100).toFixed(1).replace(".",",")+"%",[(favorable/total*100+10).toFixed(1).replace(".",",")+"%",(favorable/total*100-10).toFixed(1).replace(".",",")+"%","100%","Divida os casos favoráveis pelo total e converta para porcentagem.","Probabilidade = favoráveis ÷ possíveis.");
+    add(2,"Probabilidade","Chance de um evento","Há "+favorable+" resultados favoráveis em "+total+" resultados igualmente possíveis. Qual é a probabilidade?",""+favorable+"/"+total, (favorable/total*100).toFixed(1).replace(".",",")+"%",[(favorable/total*100+10).toFixed(1).replace(".",",")+"%",(favorable/total*100-10).toFixed(1).replace(".",",")+"%","100%"],"Divida os casos favoráveis pelo total e converta para porcentagem.","Probabilidade = favoráveis ÷ possíveis.");
     const n=2+i, ratio=3;
     add(2,"Razão e proporção","Proporção direta","Se 1 item custa R$ "+ratio+", quanto custam "+n+" itens iguais?",""+n+" × R$ "+ratio,"R$ "+(n*ratio),["R$ "+(n*ratio+ratio),"R$ "+(n*ratio-1),"R$ "+(n+ratio)],"Multiplique o preço unitário pela quantidade.","Cada item custa R$ "+ratio+".");
     const km=1+i/2;
-    add(2,"Medidas","Conversão de quilômetros","Converta "+km.toFixed(1).replace(".",",")+" km em metros.",""+km.toFixed(1).replace(".",",")+" × 1.000",(km*1000)+" m",[(km*100)+" m",(km*10000)+" m",(km*10)+" m","Cada quilômetro equivale a 1.000 metros.","Multiplique o valor por 1.000.");
+    add(2,"Medidas","Conversão de quilômetros","Converta "+km.toFixed(1).replace(".",",")+" km em metros.",""+km.toFixed(1).replace(".",",")+" × 1.000",(km*1000)+" m",[(km*100)+" m",(km*10000)+" m",(km*10)+" m"],"Cada quilômetro equivale a 1.000 metros.","Multiplique o valor por 1.000.");
   }
 
   window.MQ21QuestionBank = {added:serial,total:bank.length,version:"21.0"};
