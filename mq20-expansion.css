@@ -40,3 +40,9 @@
  .achievement-grid,#achievementGrid,[class*="achievement-grid"]{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.achievement,.achievement-card{transition:none}}
+
+/* Global: keep the ranking attached to its heading, without the old top gap */
+.mq20-global-host{padding-top:0!important;margin-top:0!important}
+.mq20-global-host>.section-heading:first-child,
+.mq20-global-host>.section-heading:first-of-type{margin-top:0!important;padding-top:0!important}
+.mq20-global-host>#mq-global-ranking{margin-block-start:0!important}
