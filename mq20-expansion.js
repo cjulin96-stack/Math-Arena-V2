@@ -6,10 +6,23 @@
 
   const bank = Array.isArray(window.Q) ? window.Q : null;
   if (!bank) {
-    window.MQ20QuestionExpansion = { ready:false, added:0, reason:"Banco principal não encontrado." };
+    const dailyBank = window.MQ15DailyQuestions;
+  let dailyAdded = 0;
+  if (Array.isArray(dailyBank)) {
+    const dailyIds = new Set(dailyBank.map(q => q && q.id).filter(Boolean));
+    bank.slice(initialLength).forEach(q => {
+      if (dailyIds.has(q.id)) return;
+      dailyBank.push({id:q.id,topic:q.topic,q:q.q,a:q.a.slice(),ok:q.ok,why:q.why});
+      dailyIds.add(q.id);
+      dailyAdded++;
+    });
+  }
+
+  window.MQ20QuestionExpansion = { ready:false, added:0, reason:"Banco principal não encontrado." };
     return;
   }
 
+  const initialLength = bank.length;
   const existing = new Set(bank.map(q => q && q.id).filter(Boolean));
   let serial = 0, added = 0;
   const rand = (min,max,seed) => min + ((seed * 37 + 17) % (max-min+1));
@@ -114,7 +127,7 @@
   }
 
   window.MQ20QuestionExpansion = {
-    ready:true, added, total:bank.length,
+    ready:true, added, dailyAdded, total:bank.length,
     topics:[...new Set(bank.map(q=>q.topic))],
     version:"20.0"
   };
