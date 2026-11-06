@@ -17,3 +17,27 @@
 .mqgr-empty{padding:24px;text-align:center;color:var(--muted,#77758b);font-size:13px}
 .mqgr-foot{margin-top:12px}
 @media(max-width:420px){.mq-global-ranking{padding:14px}.mqgr-table-head,.mqgr-row{grid-template-columns:42px minmax(0,1fr) auto;gap:7px;padding:10px 8px}.mqgr-row{font-size:12px}.mqgr-player i{flex-basis:28px;width:28px;height:28px}}
+
+
+/* MathQuest 19.1 — compacta o topo da área Global e remove espaçadores vazios */
+#view-global,
+#view-global-ranking,
+[data-view-panel="global"],
+.view-global{
+  padding-top:0!important;
+  margin-top:0!important;
+  min-height:0!important;
+}
+#view-global > .section-heading,
+#view-global-ranking > .section-heading,
+[data-view-panel="global"] > .section-heading,
+.view-global > .section-heading{
+  margin-top:0!important;
+  padding-top:0!important;
+}
+#view-global .mq-global-ranking,
+#view-global-ranking .mq-global-ranking,
+[data-view-panel="global"] .mq-global-ranking,
+.view-global .mq-global-ranking{
+  margin-top:0!important;
+}
