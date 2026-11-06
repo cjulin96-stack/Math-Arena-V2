@@ -6,18 +6,6 @@
 
   const bank = Array.isArray(window.Q) ? window.Q : null;
   if (!bank) {
-    const dailyBank = window.MQ15DailyQuestions;
-  let dailyAdded = 0;
-  if (Array.isArray(dailyBank)) {
-    const dailyIds = new Set(dailyBank.map(q => q && q.id).filter(Boolean));
-    bank.slice(initialLength).forEach(q => {
-      if (dailyIds.has(q.id)) return;
-      dailyBank.push({id:q.id,topic:q.topic,q:q.q,a:q.a.slice(),ok:q.ok,why:q.why});
-      dailyIds.add(q.id);
-      dailyAdded++;
-    });
-  }
-
   window.MQ20QuestionExpansion = { ready:false, added:0, reason:"Banco principal não encontrado." };
     return;
   }
@@ -124,6 +112,18 @@
     const hours=1+(i%4), minutes=hours*60+15;
     add("Medidas","Conversão de tempo","Quantos minutos há em "+hours+" hora(s) e 15 minutos?",minutes,minutes+15,minutes-15,
       hours+" hora(s) correspondem a "+(hours*60)+" minutos. Somando 15, temos "+minutes+".");
+  }
+
+  const dailyBank = window.MQ15DailyQuestions;
+  let dailyAdded = 0;
+  if (Array.isArray(dailyBank)) {
+    const dailyIds = new Set(dailyBank.map(q => q && q.id).filter(Boolean));
+    bank.slice(initialLength).forEach(q => {
+      if (dailyIds.has(q.id)) return;
+      dailyBank.push({id:q.id,topic:q.topic,q:q.q,a:q.a.slice(),ok:q.ok,why:q.why});
+      dailyIds.add(q.id);
+      dailyAdded++;
+    });
   }
 
   window.MQ20QuestionExpansion = {
