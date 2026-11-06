@@ -1,5 +1,5 @@
-const CACHE="mathquest-19-1-fix-version-build2";
-const ASSETS=["./mq15-upgrade.js?v=19.1.0","./mq15-upgrade.css?v=19.1.0","./mq16-mascots.js?v=19.1.0","./mq16-mascots.css?v=19.1.0","./mq17-companions.js?v=19.1.0","./mq17-companions.css?v=19.1.0","./mq18-upgrade.js?v=19.1.0","./mq18-upgrade.css?v=19.1.0","./mq19-global-ranking.js?v=19.1.0","./mq19-global-ranking.css?v=19.1.0"];
+const CACHE="mathquest-19-1-global-layout-build1";
+const ASSETS=["./mq15-upgrade.js?v=19.1.1","./mq15-upgrade.css?v=19.1.1","./mq16-mascots.js?v=19.1.1","./mq16-mascots.css?v=19.1.1","./mq17-companions.js?v=19.1.1","./mq17-companions.css?v=19.1.1","./mq18-upgrade.js?v=19.1.1","./mq18-upgrade.css?v=19.1.1","./mq19-global-ranking.js?v=19.1.1","./mq19-global-ranking.css?v=19.1.1"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });
@@ -24,7 +24,7 @@ async function upgradedPage(request){
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq15-upgrade\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
   html=html.replace(/<link\b[^>]*href=["'][^"']*mq16-mascots\.css[^"']*["'][^>]*>/gi,"");
   html=html.replace(/<script\b[^>]*src=["'][^"']*mq16-mascots\.js[^"']*["'][^>]*>\s*<\/script>/gi,"");
-  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=19.1.0"><link rel="stylesheet" href="./mq16-mascots.css?v=19.1.0"><link rel="stylesheet" href="./mq17-companions.css?v=19.1.0"><link rel="stylesheet" href="./mq18-upgrade.css?v=19.1.0"><link rel="stylesheet" href="./mq19-global-ranking.css?v=19.1.0"><script defer src="./mq15-upgrade.js?v=19.1.0"></script><script defer src="./mq16-mascots.js?v=19.1.0"></script><script defer src="./mq17-companions.js?v=19.1.0"></script><script defer src="./mq18-upgrade.js?v=19.1.0"></script><script defer src="./mq19-global-ranking.js?v=19.1.0"></script></body>');
+  html=html.replace("</body>",'<link rel="stylesheet" href="./mq15-upgrade.css?v=19.1.1"><link rel="stylesheet" href="./mq16-mascots.css?v=19.1.1"><link rel="stylesheet" href="./mq17-companions.css?v=19.1.1"><link rel="stylesheet" href="./mq18-upgrade.css?v=19.1.1"><link rel="stylesheet" href="./mq19-global-ranking.css?v=19.1.1"><script defer src="./mq15-upgrade.js?v=19.1.1"></script><script defer src="./mq16-mascots.js?v=19.1.1"></script><script defer src="./mq17-companions.js?v=19.1.1"></script><script defer src="./mq18-upgrade.js?v=19.1.1"></script><script defer src="./mq19-global-ranking.js?v=19.1.1"></script></body>');
   html=html.replace("</body>",'<script>(function(){function fix(){document.querySelectorAll("small").forEach(function(el){var t=(el.textContent||"").trim();if(["10.5","17.0","18.0"].includes(t))el.textContent="19.1";});}fix();new MutationObserver(fix).observe(document.documentElement,{subtree:true,childList:true,characterData:true});})();</script></body>');
   const headers=new Headers(network.headers);
   ["content-length","content-encoding","content-md5","etag","last-modified"].forEach(name=>headers.delete(name));
