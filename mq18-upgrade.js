@@ -62,26 +62,47 @@ if(typeof oldFinish==="function")window.finish=function(){
  };
  return result;
 };
-function closeLessonSafely(){
+function closeLessonSafely(clickedTarget){
  const modal=el("lessonModal");
- if(!modal)return;
- lessonRun++;clearTimeout(lessonTimer);
- modal.classList.add("hide","hidden");
- modal.setAttribute("aria-hidden","true");
- modal.hidden=true;
- modal.style.setProperty("display","none","important");
- modal.style.setProperty("visibility","hidden","important");
- document.body.classList.remove("mq18-lesson-active");
- const summary=el("summaryModal");
- if(summary){summary.classList.add("hide","hidden");summary.style.setProperty("display","none","important")}
- if(typeof window.showView==="function")window.showView("learn");
- requestAnimationFrame(()=>{
-  modal.classList.add("hide","hidden");
-  modal.hidden=true;
-  modal.style.setProperty("display","none","important");
+ const hideModal=()=>{
+  if(modal){
+   modal.classList.add("hide","hidden");
+   modal.setAttribute("aria-hidden","true");
+   modal.hidden=true;
+   modal.style.setProperty("display","none","important");
+   modal.style.setProperty("visibility","hidden","important");
+   modal.style.setProperty("opacity","0","important");
+   modal.style.setProperty("pointer-events","none","important");
+  }
+  if(clickedTarget){
+   const dialog=clickedTarget.closest('[role="dialog"],.modal,.modal-overlay');
+   if(dialog&&dialog!==modal){
+    dialog.classList.add("hide","hidden");
+    dialog.setAttribute("aria-hidden","true");
+    dialog.style.setProperty("display","none","important");
+    dialog.style.setProperty("visibility","hidden","important");
+   }
+  }
+  const summary=el("summaryModal");
+  if(summary){summary.classList.add("hide","hidden");summary.hidden=true;summary.style.setProperty("display","none","important")}
   document.body.classList.remove("mq18-lesson-active");
- });
+ };
+ lessonRun++;clearTimeout(lessonTimer);
+ // Switch the underlying view first; some view transitions re-open the lesson overlay.
+ if(typeof window.showView==="function")window.showView("learn");
+ hideModal();
+ requestAnimationFrame(()=>{hideModal();requestAnimationFrame(hideModal)});
+ setTimeout(hideModal,120);
+ setTimeout(hideModal,360);
 }
+document.addEventListener("click",event=>{
+ const target=event.target&&event.target.closest&&event.target.closest("#closeLesson");
+ if(!target)return;
+ event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
+ if(!confirm("Sair da lição? Esta sessão não será contabilizada como concluída."))return;
+ closeLessonSafely(target);
+},true);
+window.MQ18CloseLesson=closeLessonSafely;
 document.addEventListener("click",event=>{
  const target=event.target&&event.target.closest&&event.target.closest("#closeLesson");
  if(!target)return;
