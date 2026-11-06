@@ -61,3 +61,10 @@ body.mq18-lesson-active #lessonBody{
 @keyframes mq18-loader-progress{from{width:8%}to{width:100%}}
 @keyframes mq18-celebrate-pop{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.24) rotate(-8deg)}70%{transform:scale(.94) rotate(7deg)}100%{transform:scale(1) rotate(0)}}
 @media(prefers-reduced-motion:reduce){.mq18-loading,.mq18-loading *,.mq18-celebrate .mq17-avatar svg{animation:none!important}}
+
+/* 20.2 — hard close state must override immersive lesson display */
+#lessonModal.mq18-force-closed,
+html.mq18-lesson-active #lessonModal.mq18-force-closed,
+body.mq18-lesson-active #lessonModal.mq18-force-closed{
+ display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
+}
